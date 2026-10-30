@@ -1,0 +1,74 @@
+GLUTOFF - COMIDA SIN GLUTEN (PÁGINA ESTÁTICA / PWA)
+====================================================
+
+Es una página 100 % estática: no necesita servidor, base de datos ni
+configuración. Solo hay que subir los archivos a un hosting con HTTPS.
+
+ARCHIVOS (súbelos todos a la MISMA carpeta)
+- index.html            La app: 60 recetas, filtros, orden, guías, favoritos, menú semanal y lista de compras
+- manifest.webmanifest  Nombre, colores e iconos para instalarla
+- sw.js                 Service worker: guarda la app para usarla sin conexión
+- logo.webp             Logo de la cabecera (optimizado, ~10 KB)
+- favicon-64.png        Icono de la pestaña del navegador
+- icon-192.png          Icono de la app instalada
+- icon-512.png          Icono de la app instalada (alta resolución)
+
+CÓMO PUBLICARLA
+1. Elige un hosting estático con HTTPS (Netlify, Cloudflare Pages, GitHub Pages,
+   Vercel o tu propio dominio). Todos ofrecen plan gratuito.
+2. Sube los 7 archivos sin cambiarles el nombre. Puede ir en la raíz del sitio
+   o en una subcarpeta.
+3. Abre la dirección en el navegador. Los service workers no funcionan abriendo
+   index.html con doble clic: la dirección debe empezar con https://
+4. Instalación:
+   - Chrome / Edge: botón "Instalar app" en la cabecera de la página.
+   - iPhone: Safari > Compartir > Añadir a pantalla de inicio.
+5. Abre la app una vez con internet. Desde entonces funciona sin conexión.
+
+CÓMO ACTUALIZARLA
+- Cada vez que cambies index.html o el logo, cambia también el número de
+  versión en sw.js (const V="glutoff-v10" -> "glutoff-v11") y vuelve a subir los
+  archivos. Así los dispositivos que ya la tienen instalada reciben la novedad.
+
+QUÉ SE GUARDA Y DÓNDE
+- Favoritos, notas privadas, menú semanal y lista de compras se guardan en el navegador de
+  cada dispositivo. No se comparten entre dispositivos ni entre personas.
+- Si alguien borra los datos del navegador, los pierde. Para evitarlo, la
+  pestaña Favoritos tiene "Copia de seguridad": descarga un archivo (o copia el
+  texto) y se puede restaurar en otro dispositivo. Al restaurar se combina con
+  lo que ya hay, no se borra nada.
+
+FUNCIONES
+- Checklist "Antes de empezar": en cada receta y como primera pantalla del modo
+  cocina. Se adapta al riesgo de contaminación cruzada y a los ingredientes
+  (tamari, avena, caldo, chocolate, freidora...). No se guarda: se repasa cada vez.
+- Filtros de alérgenos guardados: la app recuerda sin lactosa, sin huevo, sin
+  frutos secos y vegano, y avisa cuántas recetas se muestran con tus filtros.
+  El botón "Limpiar filtros" los quita todos.
+- Menú semanal: se elige qué cocinar cada día (desde la pestaña Menú o desde
+  cada receta) y un botón pasa todo a la lista de compras.
+- Lista de compras agrupada por sección (verduras, lácteos, harinas...). Suma
+  los ingredientes repetidos y no incluye el agua.
+- Modo cocina: pasos en letra grande, pantalla encendida y temporizador en los
+  pasos con tiempos de espera. (La pantalla encendida depende del navegador.)
+- Compartir: cada receta se puede enviar por WhatsApp, con el menú de compartir
+  del teléfono o copiar como texto.
+- Enlaces directos: cada receta tiene su dirección, por ejemplo
+  https://tudominio.com/#noq (el código es el id de la receta en index.html).
+
+REVISIÓN DEL CONTENIDO (importante)
+- Al pie de la página se muestra "Contenido pendiente de revisión por un
+  profesional de la salud" hasta que se registre una revisión.
+- Cuando una persona profesional (nutricionista, gastroenterólogo/a) revise las
+  recetas, abre index.html, busca esta línea y completa los datos:
+    const REV={por:"",fecha:""};
+  Por ejemplo:
+    const REV={por:"Nombre Apellido, nutricionista",fecha:"11/2026"};
+  Después sube el número de versión en sw.js y vuelve a subir los archivos.
+
+NOTAS
+- Las fuentes se cargan desde Google Fonts. Tras la primera visita quedan
+  guardadas para uso sin conexión; si no cargan, la app usa fuentes del sistema.
+- El contenido (recetas, cantidades y avisos) es orientativo. Conviene que una
+  persona celíaca o un nutricionista lo revise antes de publicarlo, y recordar
+  a quienes lo usen que verifiquen siempre las etiquetas de los productos.

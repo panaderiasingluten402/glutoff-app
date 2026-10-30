@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d6b4e">
+<link rel="icon" type="image/png" href="favicon-64.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Glutoff">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glutoff · Comida sin gluten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f2;--card:#fff;--ink:#15251d;--mut:#51645a;--line:#d5ded7;--pri:#1d6b4e;--onpri:#fff;--wbg:#fff4d6;--wbd:#e8a317;--ok:#2e8b57;--warn:#e0a100;--bad:#c2410c;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a15;--card:#17261f;--ink:#e8f1ea;--mut:#9db0a4;--line:#2a3d33;--pri:#5cc79a;--onpri:#0f1a15;--wbg:#3a2f10;--wbd:#e0a100;--ok:#4cc98a;--bad:#f0743a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a15;--card:#17261f;--ink:#e8f1ea;--mut:#9db0a4;--line:#2a3d33;--pri:#5cc79a;--onpri:#0f1a15;--wbg:#3a2f10;--wbd:#e0a100;--ok:#4cc98a;--bad:#f0743a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.55 Figtree,system-ui,sans-serif}
+.w{max-width:960px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1,h2,h3{font-family:"Young Serif",Georgia,serif;font-weight:400;line-height:1.2;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem)}
+h2{font-size:1.7rem;margin-bottom:.5rem}
+h3{font-size:1.15rem}
+header{text-align:center}
+.brand{margin:0 0 .6rem;line-height:0}
+.brand img{display:block;margin:0 auto;width:min(240px,70vw);height:auto;border-radius:16px}
+@media(min-width:700px){nav{justify-content:center}}
+.sub{color:var(--mut);max-width:52ch;margin:.4rem auto 1.2rem}
+nav{display:flex;gap:.4rem;border-bottom:1px solid var(--line);margin-bottom:1.2rem;overflow-x:auto}
+nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mut);font:700 1rem Figtree,sans-serif;padding:.7rem .9rem;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--pri);border-color:var(--pri)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.flt{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:.8rem}
+label.f{display:grid;gap:.2rem;font-size:.85rem;color:var(--mut);font-weight:500}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .6rem;width:100%}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem}
+.chips label{display:flex;align-items:center;gap:.4rem;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:.35rem .8rem;cursor:pointer;font-size:.9rem}
+.chips input{width:auto;accent-color:var(--pri)}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem;display:grid;gap:.5rem;align-content:start}
+.card:hover{border-color:var(--pri)}
+.open{all:unset;cursor:pointer;color:var(--ink)}
+.open::after{content:"";position:absolute;inset:0}
+.fav{position:absolute;top:.6rem;right:.6rem;z-index:2;background:none;border:0;font-size:1.4rem;cursor:pointer;color:var(--pri);line-height:1}
+.cat{color:var(--mut);font-size:.85rem;margin:0}
+.top{display:flex;gap:.8rem;align-items:flex-start;padding-right:1.8rem}
+.th{width:72px;height:72px;border-radius:12px;flex:none;overflow:hidden;background:var(--line)}
+.th.lg{width:104px;height:104px}
+.th svg,.th img{width:100%;height:100%;display:block;object-fit:cover}
+.facts{display:flex;flex-wrap:wrap;gap:.2rem 1rem;list-style:none;margin:0;padding:0;font-size:.9rem}
+.tg{display:flex;flex-wrap:wrap;gap:.35rem}
+.tg span{background:color-mix(in srgb,var(--pri) 14%,transparent);color:var(--pri);border-radius:6px;padding:.1rem .5rem;font-size:.8rem;font-weight:700}
+.rkw{display:flex;align-items:center;gap:.5rem;font-size:.85rem}
+.rk{display:inline-flex;gap:3px}
+.rk i{width:18px;height:7px;border-radius:4px;background:var(--line)}
+.r0{--c:var(--ok)}.r1{--c:var(--warn)}.r2{--c:var(--bad)}
+.rk.r0 i:nth-child(1),.rk.r1 i:nth-child(-n+2),.rk.r2 i{background:var(--c)}
+.btn{background:var(--pri);color:var(--onpri);border:0;border-radius:8px;padding:.6rem 1rem;font:700 1rem Figtree,sans-serif;cursor:pointer}
+.back{background:none;border:0;color:var(--pri);font:700 1rem Figtree,sans-serif;cursor:pointer;padding:0;margin-bottom:1rem}
+.cols{display:grid;gap:1.5rem;grid-template-columns:1fr}
+@media(min-width:760px){.cols{grid-template-columns:300px 1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.box h3{margin-bottom:.5rem}
+.stp{display:flex;align-items:center;gap:.6rem;margin:.5rem 0}
+.stp button{width:2.2rem;height:2.2rem;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1.2rem;cursor:pointer}
+ul.ing{padding-left:1.1rem;margin:0}
+ol.st{padding-left:1.3rem;margin:0}
+ol.st li{margin-bottom:1rem;max-width:68ch}
+.warn{background:var(--wbg);border-left:4px solid var(--wbd);border-radius:6px;padding:.5rem .7rem;margin-top:.5rem;font-size:.92rem}
+.del{background:none;border:0;color:var(--bad);cursor:pointer;font:inherit;font-size:.8rem;padding:0 .3rem}
+.note{color:var(--mut);font-size:.85rem}
+.terms{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));margin:0;padding:0;list-style:none}
+.terms li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.5rem .7rem;font-size:.92rem}
+.hit{background:var(--wbg);border-left:4px solid var(--wbd);border-radius:6px;padding:.5rem .7rem;margin:.4rem 0}
+.empty{color:var(--mut);padding:1.5rem 0}
+.acts{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 1rem}
+.btn2{display:inline-block;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:.6rem 1rem;font:700 1rem Figtree,sans-serif;cursor:pointer;text-decoration:none}
+.btn2:disabled{opacity:.5;cursor:default}
+.nb{margin:0;font-size:.85rem;color:var(--mut)}
+.lnk{all:unset;cursor:pointer;color:var(--pri);text-decoration:underline;font-weight:500}
+.lnk:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.foot{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--mut);font-size:.85rem}
+.foot p{margin:.2rem 0}
+.sech{margin:1rem 0 .2rem;font:700 .95rem Figtree,sans-serif;color:var(--pri)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ck{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem max(1rem,env(safe-area-inset-bottom,0px))}
+.ck[hidden]{display:none}
+.ckw{max-width:720px;margin:0 auto}
+.ckh{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.6rem}
+.ckh b{font:400 1.25rem "Young Serif",Georgia,serif}
+.ckp{height:6px;background:var(--line);border-radius:3px;margin:.4rem 0}
+.ckp i{display:block;height:100%;background:var(--pri);border-radius:3px}
+.cks{font-size:clamp(1.4rem,4.5vw,2rem);line-height:1.4;margin:1rem 0}
+.ckn{display:flex;gap:.8rem;margin-top:1.2rem;position:sticky;bottom:0;padding:.6rem 0;background:var(--bg)}
+.ckn .btn,.ckn .btn2{flex:1;font-size:1.2rem;padding:.9rem;text-align:center}
+.ckd{font:700 2.6rem Figtree,sans-serif;font-variant-numeric:tabular-nums}
+details.box summary{cursor:pointer;font-weight:700}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap;padding:.4rem 0;border-top:1px solid var(--line)}
+.chk{display:flex;gap:.6rem;align-items:center;padding:.35rem 0;cursor:pointer}
+.chk input{width:auto;accent-color:var(--pri)}
+@media(prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<div class="w">
+<header>
+<h1 class="brand"><img src="logo.webp" width="240" height="215" alt="Glutoff · Comida sin gluten"></h1>
+<p id="net" class="note" hidden>Sin conexión: puedes seguir usando la app.</p>
+<p class="sub">Recetas y guías para cocinar sin gluten con tranquilidad, paso a paso y con avisos de contaminación cruzada.</p>
+<button id="inst" class="btn" hidden>Instalar app</button>
+</header>
+<nav aria-label="Secciones">
+<button data-v="R" aria-selected="true">Recetas</button>
+<button data-v="G" aria-selected="false">Guías</button>
+<button data-v="P" aria-selected="false" id="np">Menú</button>
+<button data-v="L" aria-selected="false" id="nl">Lista</button>
+<button data-v="F" aria-selected="false" id="nf">Favoritos</button>
+</nav>
+
+<main>
+<section id="vR">
+<div id="flt">
+<div class="flt">
+<label class="f">Buscar receta o ingrediente<input id="q" type="search" placeholder="Ej. pizza, psyllium"></label>
+<label class="f">Categoría<select id="cat"></select></label>
+<label class="f">Tipo de plato<select id="type"></select></label>
+<label class="f">Tiempo de preparación<select id="time"><option value="0">Cualquiera</option><option value="20">Hasta 20 min</option><option value="45">Hasta 45 min</option><option value="90">Hasta 90 min</option></select></label>
+<label class="f">Dificultad de la masa<select id="diff"><option value="0">Cualquiera</option><option value="1">Solo fácil</option><option value="2">Hasta media</option></select></label>
+<label class="f">Ordenar por<select id="sort"><option value="">Orden del recetario</option><option value="t">Tiempo (menor a mayor)</option><option value="d">Dificultad (fácil a difícil)</option><option value="k">Riesgo de contaminación (bajo a alto)</option><option value="n">Nombre (A–Z)</option></select></label>
+</div>
+<div class="chips" id="chips"></div>
+<p class="note" id="cnt" aria-live="polite" style="margin:-.6rem 0 1rem"></p>
+</div>
+<div id="list" class="grid"></div>
+<div id="det" hidden></div>
+</section>
+
+<section id="vG" hidden>
+<h2>Gluten oculto en etiquetas</h2>
+<p class="sub">Pega la lista de ingredientes de un producto y revisa si aparece algún nombre técnico de la lista.</p>
+<textarea id="lab" rows="3" placeholder="Ej. almidón modificado, extracto de malta, sal…"></textarea>
+<div id="res" aria-live="polite"></div>
+<h3 style="margin:1.2rem 0 .6rem">Nombres a vigilar</h3>
+<ul class="terms" id="terms"></ul>
+
+<h2 style="margin-top:2rem">Aglutinantes y sustitutos</h2>
+<div class="grid" id="bind"></div>
+
+<h2 style="margin-top:2rem">Comer fuera y viajar</h2>
+<div class="grid" id="out"></div>
+<p class="note" style="margin-top:1.5rem">Información orientativa. Consulta con tu médico o nutricionista y revisa siempre la etiqueta del producto que vas a usar.</p>
+</section>
+
+<section id="vP" hidden>
+<h2>Menú semanal</h2>
+<p class="note">Elige qué cocinar cada día y pasa todo a la lista de compras con un botón. Se guarda en este navegador.</p>
+<div id="pl" style="margin-top:1rem"></div>
+</section>
+
+<section id="vL" hidden>
+<h2>Lista de compras</h2>
+<p class="note">Suma los ingredientes de las recetas que elijas. Se guarda en este navegador. Antes de comprar, revisa en cada etiqueta que diga sin gluten.</p>
+<div id="sl" style="margin-top:1rem"></div>
+</section>
+
+<section id="vF" hidden>
+<h2>Favoritos</h2>
+<p class="note">Se guardan en este navegador y siguen ahí cuando vuelves a abrir la página.</p>
+<div id="fl" class="grid" style="margin-top:1rem"></div>
+<div class="box" style="margin-top:1.5rem"><h3>Copia de seguridad</h3>
+<p class="note">Guarda tus favoritos, notas, menú semanal, filtros de alérgenos y lista de compras para llevarlos a otro dispositivo o recuperarlos si borras los datos del navegador. Al restaurar, se combinan con lo que ya tienes.</p>
+<div class="acts"><button class="btn" id="bkd">Descargar copia</button><button class="btn2" id="bkc">Copiar copia</button><button class="btn2" id="bki">Restaurar desde archivo</button><input type="file" id="bkf" accept=".json,application/json" hidden></div>
+<label class="f">O pega aquí el texto de una copia<textarea id="bkt" rows="3"></textarea></label>
+<button class="btn2" id="bkr" style="margin-top:.5rem">Restaurar desde el texto</button>
+<p class="note" id="bkm" role="status"></p></div>
+</section>
+</main>
+<footer class="foot"><p id="rev"></p><p>Glutoff ofrece información orientativa y no reemplaza el consejo de tu médico o nutricionista. Revisa siempre la etiqueta de cada producto.</p></footer>
+<div id="ck" class="ck" role="dialog" aria-modal="true" aria-label="Modo cocina" hidden></div>
+</div>
+
+<script>
+const PA="Panadería y Masas",RE="Repostería y Dulces",RA="Comidas Rápidas",FE="Fechas Especiales";
+const CC={[PA]:"#f1e3c6",[RE]:"#f7e1ea",[RA]:"#e8efe0",[FE]:"#e6e4f5"};
+const R=[
+{id:"pan",n:"Pan de molde sin gluten",c:"Panadería y Masas",p:"Pan",d:3,t:120,s:10,k:2,tg:["sl","se","sf","v"],
+i:[[350,"g","premezcla sin gluten para pan"],[10,"g","psyllium husk en polvo"],[7,"g","levadura seca instantánea"],[1,"cdta","sal"],[1,"cda","azúcar"],[400,"ml","agua tibia"],[40,"ml","aceite de oliva"]],
+st:[["Mezcla en seco la premezcla, el psyllium, la levadura, la sal y el azúcar.","Usa un bol y un batidor de acero o plástico que no hayan tocado trigo: la madera y los coladores viejos retienen harina."],["Agrega el agua tibia y el aceite. Bate 3 minutos hasta lograr una masa blanda y pegajosa; no se amasa como la de trigo."],["Pasa la masa al molde con una espátula, alisa la superficie y deja leudar de 45 a 60 minutos, hasta que suba cerca del borde.","Forra el molde con papel de horno limpio y nuevo."],["Hornea a 200 °C durante 45 minutos. Debe sonar hueco al golpear la base.","Si compartes el horno, cubre la rejilla con papel limpio para que no caigan migas de trigo."],["Deja enfriar por completo antes de cortar; caliente, la miga queda gomosa."]],
+su:"Premezcla casera: 150 g de harina de arroz, 100 g de almidón de maíz y 100 g de fécula de mandioca. Para más sabor, cambia 50 g de arroz por harina de sorgo o trigo sarraceno certificados sin gluten.",
+tip:"Si la masa queda muy seca, añade 10 ml más de agua tibia. Para una miga más húmeda, suma 1 cdta de vinagre de manzana."},
+{id:"pizza",n:"Pizza de masa fina",c:"Panadería y Masas",p:"Plato principal",d:2,t:45,s:4,k:1,tg:["se","sf"],
+i:[[300,"g","premezcla sin gluten"],[6,"g","goma xantana (omitir si la premezcla ya la trae)"],[5,"g","levadura seca"],[1,"cdta","sal"],[220,"ml","agua tibia"],[2,"cda","aceite de oliva"],[200,"ml","salsa de tomate"],[200,"g","queso mozzarella"]],
+st:[["Mezcla la premezcla, la xantana, la levadura y la sal. Agrega el agua y el aceite y une con las manos untadas en aceite durante 3 minutos."],["Deja reposar la masa tapada 30 minutos.","Usa una tabla y un rodillo exclusivos sin gluten, o trabaja sobre papel de horno nuevo."],["Estira la masa sobre papel de horno hasta 5 mm y prehornea 8 minutos a 220 °C."],["Cubre con salsa y queso y hornea 10 minutos más.","Revisa en la etiqueta que la salsa y el queso rallado sean sin gluten: algunos llevan almidones o antiapelmazantes dudosos."]],
+su:"Cambia hasta un tercio de la premezcla por almidón de mandioca para un borde más crocante.",
+tip:"Prehornear la base evita que quede cruda en el centro cuando le pones la salsa."},
+{id:"emp",n:"Empanadas de carne",c:"Panadería y Masas",p:"Plato principal",d:2,t:75,s:12,k:1,tg:["se","sf"],
+i:[[400,"g","premezcla sin gluten"],[8,"g","goma xantana"],[100,"g","grasa vegetal o manteca derretida"],[1,"cdta","sal"],[180,"ml","agua tibia"],[400,"g","carne picada cocida"],[1,"u","cebolla"],[1,"cdta","comino"]],
+st:[["Sofríe la cebolla, suma la carne y el comino y deja enfriar el relleno.","Verifica que el comino y las demás especias sean sin gluten: algunas mezclas llevan harina como antiapelmazante."],["Mezcla la premezcla, la xantana y la sal. Agrega la grasa y el agua y amasa hasta unir. Reposa 20 minutos."],["Estira la masa fina entre dos papeles de horno limpios y corta discos.","No uses la mesada de madera ni rodillos que hayan tocado trigo."],["Rellena, cierra con el repulgue y pinta con aceite. Hornea 20 a 25 minutos a 200 °C."]],
+su:"Para una masa más flexible, cambia 100 g de premezcla por almidón de maíz.",
+tip:"La masa sin gluten se quiebra: trabájala tibia y fina, y repara las grietas con los dedos húmedos."},
+{id:"biz",n:"Bizcocho de naranja",c:"Repostería y Dulces",p:"Postre",d:2,t:60,s:8,k:1,tg:["sl","sf"],
+i:[[3,"u","huevos"],[150,"g","azúcar"],[120,"ml","aceite de girasol"],[120,"ml","jugo de naranja"],[1,"u","naranja (solo la ralladura)"],[200,"g","harina de arroz"],[50,"g","almidón de maíz"],[8,"g","polvo de hornear sin gluten"]],
+st:[["Bate los huevos con el azúcar hasta que espumen. Agrega el aceite, el jugo y la ralladura."],["Incorpora la harina de arroz, el almidón y el polvo de hornear tamizados.","Confirma que el polvo de hornear diga sin gluten: algunos llevan almidón de trigo."],["Vierte en un molde engrasado con aceite.","No lo espolvorees con harina común."],["Hornea a 180 °C durante 40 minutos, hasta que un palillo salga limpio."]],
+su:"Cambia 100 g de harina de arroz por harina de almendras para más humedad (deja de ser apto para alergia a frutos secos).",
+tip:"Si se hunde en el centro, baja el horno 10 °C y no abras la puerta antes de los 30 minutos."},
+{id:"alf",n:"Alfajores de maicena",c:"Repostería y Dulces",p:"Postre",d:2,t:60,s:20,k:1,tg:["sf"],
+i:[[250,"g","almidón de maíz (maicena)"],[50,"g","harina de arroz fina"],[100,"g","manteca blanda"],[80,"g","azúcar impalpable"],[3,"u","yemas"],[1,"cdta","polvo de hornear sin gluten"],[1,"cdta","esencia de vainilla"],[200,"g","dulce de leche"]],
+st:[["Bate la manteca con el azúcar, las yemas y la vainilla hasta crear una crema.","Revisa que la maicena y el azúcar impalpable digan sin gluten: algunos se envasan en líneas que procesan trigo."],["Suma la maicena, la harina de arroz y el polvo de hornear. Une sin amasar de más y refrigera 20 minutos."],["Estira a 5 mm, corta discos y hornea 12 a 15 minutos a 160 °C, sin que se doren."],["Deja enfriar en la bandeja y rellena con dulce de leche.","Rellena con espátulas limpias; evita cuchillos que hayan tocado pan."]],
+su:"Si no tienes harina de arroz, usa 300 g de maicena en total.",
+tip:"Se quiebran si los tocas calientes: déjalos enfriar sobre la bandeja antes de rellenar."},
+{id:"arroz",n:"Arroz salteado con verduras",c:"Comidas Rápidas",p:"Plato principal",d:1,t:15,s:2,k:0,tg:["sl","se","sf","v"],
+i:[[1.5,"tazas","arroz cocido frío"],[1,"u","zanahoria en cubitos"],[1,"u","pimiento en cubitos"],[100,"g","arvejas o choclo"],[2,"cda","tamari o salsa de soja sin gluten"],[1,"cda","aceite"],[1,"diente","ajo picado"]],
+st:[["Sofríe el ajo y las verduras en aceite durante 5 minutos."],["Suma el arroz y el tamari y saltea 3 minutos más.","La salsa de soja común contiene trigo. Usa tamari o una etiquetada sin gluten."]],
+su:"No lleva harina. Puedes cambiar el arroz por quinua cocida.",
+tip:"El arroz del día anterior queda más suelto. Si es recién hecho, extiéndelo en una bandeja 10 minutos."},
+{id:"cup",n:"Cupcakes de cumpleaños",c:"Fechas Especiales",p:"Postre",d:2,t:50,s:12,k:1,tg:["sl","sf"],
+i:[[200,"g","harina de arroz"],[60,"g","almidón de maíz"],[150,"g","azúcar"],[2,"u","huevos"],[120,"ml","aceite"],[150,"ml","bebida vegetal sin gluten"],[8,"g","polvo de hornear sin gluten"],[1,"cdta","vainilla"],[200,"g","azúcar impalpable (glaseado)"]],
+st:[["Bate los huevos con el azúcar, el aceite, la bebida vegetal y la vainilla.","Si usas bebida de avena, verifica que sea certificada sin gluten: la avena suele contaminarse con trigo."],["Agrega los secos tamizados y reparte en moldes de papel."],["Hornea 20 minutos a 180 °C y deja enfriar."],["Mezcla el azúcar impalpable con 2 cdas de agua y decora.","Revisa que el azúcar impalpable y los confites sean sin gluten: algunos llevan almidón de trigo."]],
+su:"Para un cupcake más esponjoso, cambia 40 g de harina de arroz por almidón de mandioca.",
+tip:"Prepara los cupcakes un día antes y glasea el mismo día de la fiesta."},
+{id:"pq",e:"🧀",n:"Pan de queso",c:PA,p:"Snack",d:2,t:40,s:20,k:1,tg:["sf"],
+i:[[250,"g","almidón de mandioca"],[1,"cdta","sal"],[60,"ml","aceite"],[120,"ml","leche"],[1,"u","huevo"],[120,"g","queso rallado"]],
+st:[["Hierve la leche con el aceite y la sal y viértela sobre el almidón. Mezcla hasta formar migas.","Verifica que el almidón diga sin gluten: algunos se envasan junto con harina de trigo."],["Agrega el huevo y el queso y amasa hasta que quede suave."],["Forma bolitas de 3 cm y hornea 25 minutos a 200 °C, hasta que doren."]],
+su:"Cambia un tercio del almidón por almidón de maíz para una miga menos elástica.",tip:"Se comen mejor tibios; recalienta 5 minutos en el horno si se enfrían."},
+{id:"noq",e:"🥔",n:"Ñoquis de papa",c:PA,p:"Plato principal",d:2,t:50,s:4,k:1,tg:["sl","se","sf","v"],
+i:[[600,"g","papas hervidas y pisadas"],[150,"g","almidón de mandioca"],[50,"g","harina de arroz"],[1,"cdta","sal"]],
+st:[["Mezcla la papa tibia con el almidón, la harina y la sal hasta que la masa deje de pegarse."],["Forma rollos, corta trocitos y marca con un tenedor.","Trabaja en una superficie limpia: la harina de trigo en el aire también contamina."],["Hierve hasta que floten, de 2 a 3 minutos, y sirve con tu salsa.","Usa una olla y un colador propios: el agua donde se cocinó pasta común tiene gluten."]],
+su:"Si la masa queda pegajosa, agrega 1 cda más de almidón.",tip:"Usa papas viejas y secas: con papas muy húmedas la masa pide más harina y queda dura."},
+{id:"tart",e:"🥧",n:"Tarta de verduras",c:PA,p:"Plato principal",d:2,t:70,s:8,k:1,tg:["sf"],
+i:[[250,"g","premezcla sin gluten"],[100,"g","manteca fría"],[4,"u","huevos"],[3,"cda","agua fría"],[300,"g","verduras salteadas (espinaca, cebolla)"],[150,"ml","crema"]],
+st:[["Une la premezcla con la manteca, 1 huevo y el agua. Refrigera 30 minutos."],["Forra un molde engrasado con manteca, presionando la masa con los dedos, y prehornea 10 minutos a 190 °C.","No enharines el molde con harina común."],["Mezcla las verduras con 3 huevos y la crema, vierte y hornea 30 minutos."]],
+su:"Si tu premezcla no trae aglutinante, suma ½ cdta de goma xantana a la masa.",tip:"Si la masa se rompe al levantarla, arma el molde con los dedos en lugar de estirarla."},
+{id:"tort",e:"🌮",n:"Tortillas de maíz",c:PA,p:"Snack",d:1,t:30,s:8,k:0,tg:["sl","se","sf","v"],
+i:[[250,"g","harina de maíz para tortillas sin gluten"],[1,"cdta","sal"],[350,"ml","agua tibia"]],
+st:[["Mezcla la harina con la sal y agrega el agua hasta lograr una masa suave. Reposa 15 minutos."],["Haz bolitas y aplástalas entre dos plásticos.","Cocina en una sartén que no se haya usado para tortillas de trigo."],["Dora 1 minuto por lado y guarda tapadas con un paño."]],
+su:"No necesita sustituto de harina; si quieres más flexibilidad, suma 2 cdas de almidón de mandioca.",tip:"Si se quiebran en los bordes, agrega 1 cda de agua a la masa."},
+{id:"foc",e:"🫓",n:"Focaccia con romero",c:PA,p:"Pan",d:3,t:90,s:8,k:2,tg:["sl","se","sf","v"],
+i:[[350,"g","premezcla sin gluten para pan"],[8,"g","psyllium husk"],[7,"g","levadura seca"],[1,"cdta","sal"],[400,"ml","agua tibia"],[4,"cda","aceite de oliva"],[1,"cda","romero"]],
+st:[["Mezcla los secos y agrega el agua y 2 cdas de aceite. Bate 3 minutos."],["Vierte en una bandeja con papel de horno nuevo aceitado y deja leudar 45 minutos.","Usa papel nuevo: el que se reutiliza arrastra restos de trigo."],["Marca hoyitos con los dedos aceitados, agrega aceite y romero y hornea 25 a 30 minutos a 220 °C."]],
+su:"Cambia 50 g de premezcla por almidón de mandioca para una corteza más crocante.",tip:"La masa debe quedar blanda y pegajosa; si la amasas como pan de trigo se seca."},
+{id:"tall",e:"🍝",n:"Tallarines caseros",c:PA,p:"Plato principal",d:3,t:60,s:4,k:2,tg:["sf"],
+i:[[200,"g","harina de arroz"],[100,"g","almidón de mandioca"],[5,"g","goma xantana"],[3,"u","huevos"],[1,"cda","aceite"],[1,"pizca","sal"]],
+st:[["Mezcla los secos, agrega los huevos y el aceite y amasa 5 minutos. Si hace falta, suma agua de a gotas."],["Reposa 30 minutos envuelta y estira fina entre papeles limpios.","Evita mesadas de madera y rodillos usados con trigo."],["Corta tiras y hierve 2 a 3 minutos en agua limpia.","Usa una olla y un colador sin gluten."]],
+su:"Si prefieres una pasta más firme, cambia 50 g de harina de arroz por harina de garbanzo.",tip:"La masa sin gluten se seca rápido: tapa lo que no estés trabajando."},
+{id:"gall",e:"🍪",n:"Galletas con chispas de chocolate",c:RE,p:"Snack",d:1,t:30,s:16,k:1,tg:["sf"],
+i:[[150,"g","harina de arroz"],[50,"g","almidón de maíz"],[120,"g","manteca blanda"],[100,"g","azúcar mascabo"],[1,"u","huevo"],[120,"g","chispas de chocolate sin gluten"],[1,"cdta","polvo de hornear sin gluten"]],
+st:[["Bate la manteca con el azúcar y el huevo."],["Agrega los secos y las chispas.","Revisa que las chispas digan sin gluten: algunas llevan extracto de malta."],["Reparte porciones en una bandeja con papel nuevo y hornea 12 minutos a 180 °C."]],
+su:"Cambia 50 g de harina de arroz por harina de avena certificada sin gluten para más sabor.",tip:"Refrigera la masa 30 minutos para que las galletas no se extiendan demasiado."},
+{id:"brow",e:"🍫",n:"Brownie de chocolate",c:RE,p:"Postre",d:1,t:40,s:9,k:1,tg:["sl","sf"],
+i:[[200,"g","chocolate amargo sin gluten"],[100,"ml","aceite"],[150,"g","azúcar"],[3,"u","huevos"],[60,"g","harina de arroz"],[30,"g","cacao puro"]],
+st:[["Derrite el chocolate con el aceite y deja entibiar."],["Agrega el azúcar y los huevos y luego la harina y el cacao tamizados.","Usa cacao puro: las mezclas para chocolatada pueden llevar malta."],["Vierte en un molde de 20 cm con papel nuevo y hornea 25 minutos a 180 °C. El centro debe quedar húmedo."]],
+su:"Cambia la harina de arroz por 60 g de harina de almendras (deja de ser apto para alergia a frutos secos).",tip:"Déjalo enfriar antes de cortar para que se vea limpio."},
+{id:"crep",e:"🥞",n:"Crepes",c:RE,p:"Postre",d:1,t:25,s:6,k:1,tg:["sf"],
+i:[[120,"g","harina de arroz"],[30,"g","almidón de maíz"],[2,"u","huevos"],[300,"ml","leche"],[1,"cda","manteca derretida"]],
+st:[["Licúa todos los ingredientes hasta que no queden grumos y reposa 30 minutos."],["Cocina una capa fina en una sartén antiadherente caliente, 1 minuto por lado.","Si tu sartén está rayada, el gluten de usos previos queda atrapado: usa una exclusiva."]],
+su:"Para crepes saladas, agrega una pizca de sal y omite el azúcar del relleno.",tip:"Reposar la mezcla evita que se rompan al darlas vuelta."},
+{id:"chur",e:"🍩",n:"Churros",c:RE,p:"Snack",d:2,t:30,s:6,k:2,tg:["sl","se","sf","v"],
+i:[[250,"ml","agua"],[2,"cda","aceite"],[1,"pizca","sal"],[120,"g","harina de arroz fina"],[40,"g","almidón de maíz"],[500,"ml","aceite para freír"],[4,"cda","azúcar para rebozar"]],
+st:[["Hierve el agua con el aceite y la sal. Agrega las harinas de golpe y mezcla hasta lograr una masa lisa."],["Pasa la masa tibia a una manga con boquilla estrella.","Fríe en aceite nuevo y una freidora propia: el aceite que frió empanizados comunes contiene gluten."],["Fríe 3 minutos a 180 °C, escurre y pasa por azúcar."]],
+su:"Para más estructura, suma 3 g de goma xantana a las harinas.",tip:"Si la masa sale muy blanda, cocínala 1 minuto más en la olla para evaporar agua."},
+{id:"mufp",e:"🍌",n:"Muffins de plátano",c:RE,p:"Snack",d:1,t:40,s:10,k:1,tg:["sl","sf"],
+i:[[3,"u","plátanos maduros"],[2,"u","huevos"],[80,"ml","aceite"],[80,"g","azúcar"],[180,"g","harina de arroz"],[8,"g","polvo de hornear sin gluten"],[1,"cdta","canela"]],
+st:[["Pisa los plátanos y mezcla con los huevos, el aceite y el azúcar."],["Agrega la harina, el polvo de hornear y la canela.","Verifica que la canela sea pura: algunos molidos llevan relleno."],["Reparte en moldes de papel nuevos y hornea 22 minutos a 180 °C."]],
+su:"Cambia 60 g de harina de arroz por almidón de mandioca para una miga más suave.",tip:"Mientras más maduros los plátanos, más dulces y húmedos salen."},
+{id:"flo",e:"🎂",n:"Torta de chocolate sin harina",c:RE,p:"Postre",d:2,t:50,s:10,k:0,tg:["sf"],
+i:[[200,"g","chocolate amargo sin gluten"],[150,"g","manteca"],[150,"g","azúcar"],[4,"u","huevos"],[2,"cda","cacao puro"]],
+st:[["Derrite el chocolate con la manteca y mezcla con el azúcar."],["Agrega los huevos de a uno y el cacao.","Revisa que el chocolate y el cacao digan sin gluten."],["Hornea 30 minutos a 170 °C en molde engrasado con manteca. El centro debe quedar apenas húmedo."]],
+su:"No lleva harina, así que no necesita sustituto.",tip:"Sale mejor al día siguiente, bien fría."},
+{id:"tor",e:"🍳",n:"Tortilla de papas",c:RA,p:"Plato principal",d:1,t:25,s:3,k:0,tg:["sl","sf"],
+i:[[500,"g","papas en láminas finas"],[1,"u","cebolla"],[5,"u","huevos"],[100,"ml","aceite"],[1,"cdta","sal"]],
+st:[["Cocina las papas y la cebolla en aceite a fuego bajo durante 12 minutos."],["Mezcla con los huevos batidos y la sal.","Usa sartén y aceite limpios, sin restos de empanizados."],["Cuaja 4 minutos por lado."]],
+su:"No lleva harina.",tip:"Déjala reposar 5 minutos antes de cortar."},
+{id:"quin",e:"🥗",n:"Quinua con verduras y huevo",c:RA,p:"Plato principal",d:1,t:20,s:2,k:0,tg:["sl","sf"],
+i:[[1,"taza","quinua"],[2,"tazas","agua"],[1,"u","zucchini"],[1,"u","tomate"],[2,"u","huevos"],[1,"cda","aceite"]],
+st:[["Enjuaga la quinua y hiérvela 15 minutos.","Revisa que el paquete diga sin gluten: a veces se envasa junto con cereales con trigo."],["Saltea las verduras en aceite 5 minutos."],["Mezcla con la quinua y corona con los huevos cocidos o fritos."]],
+su:"Puedes cambiar la quinua por arroz.",tip:"Enjuagar la quinua quita el amargor natural."},
+{id:"alb",e:"🍗",n:"Albóndigas de pollo con arroz",c:RA,p:"Plato principal",d:1,t:40,s:4,k:0,tg:["sl","sf"],
+i:[[500,"g","pollo picado"],[1,"u","huevo"],[3,"cda","harina de arroz"],[1,"diente","ajo picado"],[1,"cda","perejil"],[2,"tazas","arroz cocido"]],
+st:[["Mezcla el pollo con el huevo, la harina, el ajo y el perejil.","No uses pan rallado común para ligar: usa harina de arroz o pan rallado sin gluten."],["Forma 20 bolitas y hornea 20 minutos a 200 °C."],["Sirve con el arroz. Para meal prep, guarda hasta 4 días en la heladera."]],
+su:"Cambia la harina de arroz por almidón de maíz.",tip:"Congela las bolitas crudas en una bandeja y guárdalas en bolsa para usarlas durante semanas."},
+{id:"len",e:"🍲",n:"Sopa de lentejas",c:RA,p:"Plato principal",d:1,t:35,s:4,k:0,tg:["sl","se","sf","v"],
+i:[[1,"taza","lentejas"],[1,"u","cebolla"],[1,"u","zanahoria"],[1,"u","papa"],[1,"l","caldo sin gluten"],[1,"cdta","comino"]],
+st:[["Sofríe la cebolla y la zanahoria 5 minutos."],["Agrega las lentejas, la papa en cubos, el comino y el caldo.","Los cubos de caldo comunes pueden llevar trigo o malta: elige uno sin gluten."],["Cocina 25 minutos a fuego medio."]],
+su:"No lleva harina.",tip:"Un chorrito de limón al servir resalta el sabor."},
+{id:"gar",e:"🥗",n:"Ensalada de garbanzos",c:RA,p:"Plato principal",d:1,t:10,s:2,k:0,tg:["sl","se","sf","v"],
+i:[[2,"tazas","garbanzos cocidos"],[1,"u","pepino"],[1,"u","tomate"],[1,"u","cebolla morada pequeña"],[2,"cda","aceite de oliva"],[1,"u","limón"]],
+st:[["Enjuaga los garbanzos.","Si usas envasados, lee la etiqueta: algunos llevan aditivos."],["Corta las verduras y mezcla con aceite y limón."]],
+su:"No lleva harina.",tip:"Déjala reposar 10 minutos para que tome sabor."},
+{id:"past",e:"🍝",n:"Pasta con tomate",c:RA,p:"Plato principal",d:1,t:20,s:2,k:1,tg:["sl","se","sf","v"],
+i:[[200,"g","pasta sin gluten"],[400,"g","tomate triturado"],[2,"dientes","ajo"],[2,"cda","aceite de oliva"],[1,"cdta","albahaca seca"]],
+st:[["Cocina el ajo en aceite 1 minuto, suma el tomate y la albahaca y cocina 10 minutos."],["Hierve la pasta en abundante agua limpia.","Usa una olla y un colador propios y no la enjuagues."],["Mezcla con la salsa y sirve."]],
+su:"No lleva harina.",tip:"Cocina 1 minuto menos de lo que indica el paquete: la pasta sin gluten se pasa rápido."},
+{id:"pdn",e:"🎄",n:"Pan dulce navideño",c:FE,p:"Pan",d:3,t:150,s:12,k:2,tg:[],
+i:[[500,"g","premezcla sin gluten para pan"],[12,"g","psyllium husk"],[10,"g","levadura seca"],[120,"g","azúcar"],[3,"u","huevos"],[100,"g","manteca blanda"],[250,"ml","leche tibia"],[200,"g","frutas confitadas y pasas"],[1,"u","naranja (ralladura)"]],
+st:[["Mezcla los secos y agrega los huevos, la manteca, la leche y la ralladura. Bate 4 minutos."],["Incorpora las frutas y reposa 60 minutos.","Revisa la etiqueta de las frutas confitadas: algunas llevan almidones o jarabes con gluten."],["Reparte en moldes de papel nuevos y hornea 45 minutos a 180 °C.","Usa moldes nuevos: los reutilizados pueden tener restos de masa con trigo."]],
+su:"Cambia 100 g de premezcla por almidón de mandioca para una miga más liviana.",tip:"Cubre con papel de aluminio si se dora demasiado antes de terminar."},
+{id:"jen",e:"🎄",n:"Galletas de jengibre",c:FE,p:"Snack",d:1,t:45,s:24,k:1,tg:["sf"],
+i:[[200,"g","harina de arroz"],[60,"g","almidón de maíz"],[100,"g","manteca"],[100,"g","azúcar mascabo"],[1,"u","huevo"],[3,"cda","miel"],[2,"cdta","jengibre en polvo"],[1,"cdta","canela"]],
+st:[["Bate la manteca con el azúcar, el huevo y la miel."],["Agrega las harinas y las especias. Refrigera 30 minutos.","Revisa que las especias sean puras; algunas mezclas llevan harina."],["Estira a 4 mm, corta con moldes y hornea 10 minutos a 180 °C."]],
+su:"Si la masa se rompe, suma 3 g de goma xantana.",tip:"Estira entre dos papeles de horno para que no se pegue."},
+{id:"tcum",e:"🎂",n:"Torta de cumpleaños de vainilla",c:FE,p:"Postre",d:2,t:70,s:12,k:1,tg:["sl","sf"],
+i:[[250,"g","harina de arroz"],[80,"g","almidón de maíz"],[200,"g","azúcar"],[4,"u","huevos"],[150,"ml","aceite"],[200,"ml","bebida vegetal sin gluten"],[10,"g","polvo de hornear sin gluten"],[1,"cda","esencia de vainilla"]],
+st:[["Bate los huevos con el azúcar y agrega el aceite, la bebida vegetal y la vainilla."],["Suma los secos tamizados y vierte en un molde de 24 cm engrasado con aceite."],["Hornea 40 minutos a 175 °C y enfría antes de decorar.","Revisa rellenos, grageas y decoraciones: en los cumpleaños es donde más aparece gluten oculto."]],
+su:"Para más humedad, cambia 100 ml de bebida vegetal por yogur sin gluten.",tip:"Hornea con un día de anticipación: la miga se asienta y es más fácil de cortar."},
+{id:"pizz",e:"🍕",n:"Pizzetas para reuniones",c:FE,p:"Snack",d:2,t:40,s:16,k:1,tg:["se","sf"],
+i:[[300,"g","premezcla sin gluten"],[5,"g","levadura seca"],[220,"ml","agua tibia"],[2,"cda","aceite"],[150,"ml","salsa de tomate"],[150,"g","queso"]],
+st:[["Une la premezcla, la levadura, el agua y el aceite y reposa 30 minutos."],["Estira a 4 mm sobre papel nuevo y corta discos de 6 cm."],["Cubre con salsa y queso y hornea 12 minutos a 220 °C.","Si hay pizzas con gluten en la reunión, hornea primero estas y mantenlas tapadas y separadas."]],
+su:"Cambia un tercio de la premezcla por almidón de mandioca para más crocancia.",tip:"Se pueden preparar y congelar sin hornear hasta 1 mes."},
+{id:"truf",e:"🍬",n:"Trufas de chocolate",c:FE,p:"Postre",d:1,t:30,s:20,k:0,tg:["sf"],
+i:[[200,"g","chocolate amargo sin gluten"],[120,"ml","crema de leche"],[1,"cda","manteca"],[4,"cda","cacao puro"]],
+st:[["Calienta la crema y vierte sobre el chocolate picado. Agrega la manteca y mezcla hasta que brille."],["Refrigera 2 horas.","Revisa que el chocolate y el cacao sean sin gluten."],["Forma bolitas con las manos limpias y pásalas por el cacao."]],
+su:"No lleva harina.",tip:"Si la mezcla está muy dura al enrollar, déjala 5 minutos a temperatura ambiente."},
+{id:"bun",n:"Panecillos de hamburguesa",c:PA,p:"Pan",d:3,t:90,s:6,k:2,tg:["sl","se","sf","v"],
+i:[[300,"g","premezcla sin gluten para pan"],[8,"g","psyllium husk"],[7,"g","levadura seca"],[1,"cda","azúcar"],[1,"cdta","sal"],[300,"ml","agua tibia"],[30,"ml","aceite"],[1,"cda","semillas de sésamo"]],
+st:[["Mezcla los secos y agrega el agua y el aceite. Bate 3 minutos."],["Forma 6 bolas en una bandeja con papel de horno nuevo, aplástalas y deja leudar 40 minutos.","Usa papel nuevo y utensilios que no hayan tocado trigo."],["Esparce el sésamo y hornea 25 minutos a 200 °C.","Si los vas a tostar, usa una tostadora o sartén exclusivas."]],
+su:"Cambia 50 g de premezcla por almidón de mandioca para una miga más tierna.",tip:"Pincélalos con agua antes de hornear para una corteza brillante."},
+{id:"cmz",n:"Pan de maíz",c:PA,p:"Pan",d:1,t:45,s:8,k:1,tg:["sf"],
+i:[[200,"g","harina de maíz fina"],[100,"g","harina de arroz"],[2,"u","huevos"],[250,"ml","leche"],[60,"ml","aceite"],[1,"cda","azúcar"],[10,"g","polvo de hornear sin gluten"]],
+st:[["Mezcla las harinas, el azúcar y el polvo de hornear.","Verifica que la harina de maíz diga sin gluten: a veces se muele en molinos que procesan trigo."],["Agrega los huevos, la leche y el aceite y mezcla sin batir de más."],["Vierte en un molde de 20 cm engrasado con aceite y hornea 25 minutos a 190 °C."]],
+su:"Cambia la harina de arroz por más harina de maíz fina para un pan más rústico.",tip:"Está listo cuando un palillo sale limpio y los bordes se separan del molde."},
+{id:"rav",n:"Ravioles de ricota",c:PA,p:"Plato principal",d:3,t:90,s:4,k:2,tg:["sf"],
+i:[[200,"g","harina de arroz"],[100,"g","almidón de mandioca"],[5,"g","goma xantana"],[2,"u","huevos para la masa"],[250,"g","ricota"],[50,"g","queso rallado"],[1,"u","yema para el relleno"]],
+st:[["Mezcla los secos con los huevos y amasa 5 minutos. Reposa 30 minutos envuelta."],["Mezcla la ricota con el queso y la yema."],["Estira la masa fina entre papeles limpios, rellena y sella los bordes.","No uses mesadas de madera ni rodillos que hayan tocado trigo."],["Hierve 3 a 4 minutos en agua limpia.","Usa una olla y un colador sin gluten."]],
+su:"Para una masa más flexible, cambia 50 g de harina de arroz por almidón de maíz.",tip:"Sella con un dedo mojado y saca el aire: si queda aire, se abren al hervir."},
+{id:"pit",n:"Pan pita",c:PA,p:"Pan",d:2,t:60,s:6,k:1,tg:["sl","se","sf","v"],
+i:[[300,"g","premezcla sin gluten para pan"],[8,"g","psyllium husk"],[5,"g","levadura seca"],[1,"cdta","sal"],[280,"ml","agua tibia"],[2,"cda","aceite de oliva"]],
+st:[["Mezcla todo hasta lograr una masa blanda y deja reposar 30 minutos."],["Divide en 6 bolas y estira cada una a 5 mm entre papeles.","Usa papeles nuevos; no reutilices los de otras masas."],["Hornea 5 minutos a 220 °C sobre una bandeja precalentada con papel nuevo, hasta que inflen.","No uses una piedra o placa que haya tocado pan de trigo."]],
+su:"Cambia 50 g de premezcla por harina de sorgo certificada sin gluten para más sabor.",tip:"El horno muy caliente es lo que hace que se inflen y formen el bolsillo."},
+{id:"flan",n:"Flan de vainilla",c:RE,p:"Postre",d:1,t:60,s:6,k:0,tg:["sf"],
+i:[[4,"u","huevos"],[500,"ml","leche"],[120,"g","azúcar"],[1,"cdta","esencia de vainilla"],[80,"g","azúcar para el caramelo"]],
+st:[["Derrite el azúcar del caramelo en una flanera y reparte por el fondo."],["Licúa los huevos, la leche, el azúcar y la vainilla.","Lee la etiqueta de la esencia de vainilla."],["Cocina a baño maría 50 minutos a 170 °C y refrigera 4 horas antes de desmoldar."]],
+su:"No lleva harina.",tip:"Cuela la mezcla antes de verterla para una textura sin burbujas."},
+{id:"mou",n:"Mousse de chocolate",c:RE,p:"Postre",d:1,t:20,s:4,k:0,tg:["sf"],
+i:[[150,"g","chocolate amargo sin gluten"],[3,"u","huevos"],[30,"g","azúcar"],[1,"cda","manteca"]],
+st:[["Derrite el chocolate con la manteca y agrega las yemas.","Revisa que el chocolate diga sin gluten."],["Bate las claras con el azúcar a punto de nieve e intégralas con movimientos envolventes."],["Reparte en vasos y refrigera 3 horas.","Usa huevos frescos: esta mousse lleva huevo crudo y no es recomendable para embarazadas, niños pequeños ni personas con defensas bajas."]],
+su:"No lleva harina.",tip:"Integra las claras en dos tandas para que no pierda aire."},
+{id:"mer",n:"Merengues",c:RE,p:"Snack",d:2,t:120,s:20,k:0,tg:["sl","sf"],
+i:[[3,"u","claras"],[150,"g","azúcar"],[1,"cdta","jugo de limón"],[1,"cda","almidón de maíz"]],
+st:[["Bate las claras con el limón hasta que hagan espuma."],["Agrega el azúcar de a poco hasta lograr picos firmes y brillantes. Suma el almidón.","Revisa que el almidón y los colorantes sean sin gluten."],["Forma con manga sobre papel nuevo y hornea 90 minutos a 100 °C. Déjalos enfriar dentro del horno."]],
+su:"No lleva harina.",tip:"Una gota de grasa o yema impide que las claras suban: usa un bol seco y limpio."},
+{id:"lem",n:"Tarta de limón",c:RE,p:"Postre",d:2,t:70,s:8,k:1,tg:["sf"],
+i:[[200,"g","galletas sin gluten trituradas"],[90,"g","manteca derretida"],[395,"g","leche condensada"],[3,"u","yemas"],[120,"ml","jugo de limón"]],
+st:[["Mezcla las galletas con la manteca, presiona en un molde y hornea 8 minutos a 180 °C.","Elige galletas con sello sin gluten."],["Mezcla la leche condensada con las yemas y el limón y vierte sobre la base."],["Hornea 15 minutos y refrigera 3 horas antes de servir."]],
+su:"Si prefieres una base casera, usa 200 g de harina de arroz, 60 g de azúcar y 100 g de manteca.",tip:"El relleno debe temblar apenas al sacarlo: cuaja al enfriar."},
+{id:"wrp",n:"Wraps de pollo",c:RA,p:"Plato principal",d:1,t:20,s:2,k:0,tg:["sf","se"],
+i:[[4,"u","tortillas de maíz (receta de este recetario)"],[300,"g","pollo cocido desmenuzado"],[1,"u","tomate"],[2,"hojas","lechuga"],[2,"cda","yogur natural"]],
+st:[["Calienta las tortillas en una sartén seca.","Si las compras, verifica que sean 100 % maíz sin gluten: muchas llevan trigo."],["Mezcla el pollo con el yogur."],["Arma con lechuga, tomate y pollo, y enrolla."]],
+su:"No lleva harina si usas tortillas de maíz.",tip:"Envuelve cada wrap en papel para llevarlo al trabajo."},
+{id:"ome",n:"Omelette de espinaca",c:RA,p:"Plato principal",d:1,t:10,s:1,k:0,tg:["sf"],
+i:[[3,"u","huevos"],[1,"taza","espinaca"],[1,"cda","aceite"],[40,"g","queso"],[1,"pizca","sal"]],
+st:[["Saltea la espinaca 1 minuto y reserva."],["Bate los huevos con la sal y viértelos en la sartén caliente.","Usa una sartén limpia: el antiadherente rayado retiene restos de gluten."],["Agrega espinaca y queso, dobla y cocina 1 minuto más."]],
+su:"No lleva harina.",tip:"Fuego medio: si está muy fuerte, se seca por fuera y queda crudo por dentro."},
+{id:"sal",n:"Bowl de salmón y arroz",c:RA,p:"Plato principal",d:1,t:25,s:2,k:0,tg:["sl","se","sf"],
+i:[[2,"tazas","arroz cocido"],[2,"u","filetes de salmón"],[1,"u","palta"],[1,"u","pepino"],[2,"cda","tamari sin gluten"],[1,"cda","aceite"]],
+st:[["Marca el salmón en aceite 3 a 4 minutos por lado."],["Arma los bowls con arroz, salmón, palta y pepino."],["Aliña con tamari.","Revisa que el tamari y el alga nori no incluyan trigo."]],
+su:"No lleva harina.",tip:"Seca bien el salmón antes de cocinarlo para que dore."},
+{id:"zap",n:"Sopa de zapallo",c:RA,p:"Plato principal",d:1,t:30,s:4,k:0,tg:["sl","se","sf","v"],
+i:[[800,"g","zapallo en cubos"],[1,"u","cebolla"],[1,"u","papa"],[800,"ml","caldo sin gluten"],[1,"cda","aceite"],[2,"cda","semillas de zapallo"]],
+st:[["Sofríe la cebolla en aceite 5 minutos."],["Agrega el zapallo, la papa y el caldo y cocina 20 minutos.","Los cubos de caldo comunes pueden llevar trigo o malta: elige uno sin gluten."],["Procesa hasta que quede cremosa y sirve con las semillas."]],
+su:"No lleva harina; la papa espesa la sopa.",tip:"Tostar las semillas 2 minutos en seco les da más sabor."},
+{id:"man",n:"Tarta de manzana",c:FE,p:"Postre",d:2,t:80,s:8,k:1,tg:["sf"],
+i:[[250,"g","premezcla sin gluten"],[120,"g","manteca fría"],[1,"u","huevo"],[3,"cda","agua fría"],[4,"u","manzanas"],[3,"cda","azúcar"],[1,"cdta","canela"]],
+st:[["Une la premezcla con la manteca, el huevo y el agua. Refrigera 30 minutos."],["Forra un molde engrasado con manteca presionando con los dedos.","No enharines el molde con harina común."],["Cubre con las manzanas en láminas mezcladas con azúcar y canela y hornea 40 minutos a 190 °C."]],
+su:"Si tu premezcla no trae aglutinante, suma ½ cdta de goma xantana a la masa.",tip:"Pasa las manzanas por una sartén 3 minutos antes de hornear para que no suelten tanta agua."},
+{id:"che",n:"Cheesecake",c:FE,p:"Postre",d:2,t:90,s:10,k:1,tg:["sf"],
+i:[[200,"g","galletas sin gluten trituradas"],[80,"g","manteca derretida"],[500,"g","queso crema"],[120,"g","azúcar"],[3,"u","huevos"],[1,"cda","almidón de maíz"],[1,"cdta","esencia de vainilla"]],
+st:[["Mezcla las galletas con la manteca y presiona en un molde. Refrigera 20 minutos.","Elige galletas con sello sin gluten."],["Bate el queso con el azúcar, los huevos, el almidón y la vainilla, todos a temperatura ambiente."],["Vierte, hornea 50 minutos a 160 °C y apaga el horno. Deja 1 hora adentro y refrigera 4 horas."]],
+su:"Para una base casera, usa 200 g de harina de arroz, 60 g de azúcar y 100 g de manteca.",tip:"Hornéalo a baño maría si quieres evitar grietas en la superficie."},
+{id:"bru",n:"Bruschettas",c:FE,p:"Snack",d:1,t:20,s:8,k:2,tg:["sl","se","sf","v"],
+i:[[8,"rodajas","pan sin gluten"],[3,"u","tomates"],[1,"diente","ajo"],[2,"cda","aceite de oliva"],[6,"hojas","albahaca"]],
+st:[["Tuesta el pan en el horno sobre papel nuevo.","Evita la tostadora común: las migas de pan de trigo contaminan."],["Frota el ajo sobre el pan."],["Mezcla el tomate picado con aceite y albahaca y sirve sobre el pan."]],
+su:"Usa el pan de molde de este recetario.",tip:"Escurre el tomate para que el pan no se ablande."},
+{id:"cal",n:"Calzone de jamón y queso",c:PA,p:"Plato principal",d:3,t:60,s:4,k:2,tg:["se","sf"],
+i:[[300,"g","premezcla sin gluten"],[5,"g","levadura seca"],[220,"ml","agua tibia"],[2,"cda","aceite"],[150,"g","jamón sin gluten"],[200,"g","queso"],[100,"ml","salsa de tomate"]],
+st:[["Mezcla la premezcla, la levadura, el agua y el aceite. Reposa 30 minutos."],["Estira 4 discos sobre papel de horno nuevo y cubre la mitad de cada uno con salsa, jamón y queso.","Revisa que el jamón y el queso sean sin gluten: algunos fiambres llevan almidones o proteína hidrolizada."],["Dobla, sella los bordes con los dedos húmedos y hornea 20 minutos a 200 °C."]],
+su:"Cambia un tercio de la premezcla por almidón de mandioca para una masa más elástica.",tip:"Haz un corte pequeño arriba para que escape el vapor y no se abra."},
+{id:"nan",n:"Pan plano de yogur",c:PA,p:"Pan",d:2,t:30,s:4,k:1,tg:["se","sf"],
+i:[[250,"g","premezcla sin gluten"],[6,"g","goma xantana"],[1,"cdta","polvo de hornear sin gluten"],[150,"g","yogur natural"],[60,"ml","agua"],[1,"cda","aceite"],[1,"pizca","sal"]],
+st:[["Mezcla los secos y agrega el yogur, el agua y el aceite. Amasa y reposa 15 minutos."],["Divide en 4 bolas y estira cada una entre dos papeles limpios."],["Cocina en una sartén seca y caliente, 2 minutos por lado.","Usa una sartén que no haya tostado pan o tortillas de trigo."]],
+su:"Si no usas xantana, cambia 2 cdas de premezcla por psyllium.",tip:"Pincélalos con ajo y aceite apenas salen de la sartén."},
+{id:"gri",n:"Palitos de pan",c:PA,p:"Snack",d:2,t:50,s:16,k:1,tg:["sl","se","sf","v"],
+i:[[250,"g","premezcla sin gluten para pan"],[6,"g","psyllium husk"],[5,"g","levadura seca"],[1,"cdta","sal"],[180,"ml","agua tibia"],[2,"cda","aceite de oliva"]],
+st:[["Mezcla todo hasta lograr una masa blanda y reposa 20 minutos."],["Estira un rectángulo de 1 cm sobre papel nuevo y corta tiras.","Usa papel de horno nuevo, no reutilizado."],["Hornea 15 a 18 minutos a 200 °C, dándolos vuelta a la mitad."]],
+su:"Para más crocancia, cambia 50 g de premezcla por almidón de maíz.",tip:"Pincélalos con aceite y sésamo antes de hornear."},
+{id:"las",n:"Lasaña de carne",c:PA,p:"Plato principal",d:2,t:80,s:6,k:2,tg:["sf"],
+i:[[250,"g","láminas de lasaña sin gluten"],[500,"g","carne picada"],[500,"ml","salsa de tomate"],[1,"u","cebolla"],[30,"g","manteca"],[30,"g","almidón de maíz"],[500,"ml","leche"],[200,"g","queso"]],
+st:[["Sofríe la cebolla, suma la carne y la salsa de tomate y cocina 15 minutos."],["Derrite la manteca, agrega el almidón y la leche y revuelve hasta espesar."],["Hierve las láminas en agua limpia 2 minutos.","Usa una olla y un colador sin gluten."],["Arma capas de pasta, carne, salsa blanca y queso. Hornea 30 minutos a 190 °C."]],
+su:"Espesa la salsa blanca con almidón de maíz o de mandioca, nunca con harina de trigo.",tip:"Deja reposar 10 minutos antes de cortar para que mantenga las capas."},
+{id:"avn",n:"Cookies de avena y pasas",c:RE,p:"Snack",d:1,t:30,s:16,k:1,tg:["sl","sf"],
+i:[[150,"g","avena certificada sin gluten"],[80,"g","harina de arroz"],[100,"g","azúcar mascabo"],[80,"ml","aceite"],[1,"u","huevo"],[1,"cdta","polvo de hornear sin gluten"],[60,"g","pasas"]],
+st:[["Mezcla la avena, la harina, el azúcar y el polvo de hornear.","Compra solo avena con sello sin gluten: la común suele contaminarse con trigo. Algunas personas celíacas no toleran la avena; consúltalo con tu médico."],["Agrega el aceite, el huevo y las pasas."],["Forma bolitas aplastadas sobre papel nuevo y hornea 12 minutos a 180 °C."]],
+su:"Si no toleras avena, cambia por copos de quinua o de arroz.",tip:"Déjalas enfriar en la bandeja: se endurecen al enfriar."},
+{id:"zan",n:"Torta de zanahoria",c:RE,p:"Postre",d:2,t:60,s:10,k:1,tg:["sl","sf"],
+i:[[3,"u","zanahorias ralladas"],[3,"u","huevos"],[150,"g","azúcar"],[120,"ml","aceite"],[200,"g","harina de arroz"],[50,"g","almidón de maíz"],[8,"g","polvo de hornear sin gluten"],[1,"cdta","canela"]],
+st:[["Bate los huevos con el azúcar y el aceite. Agrega la zanahoria."],["Suma los secos tamizados.","Verifica que el polvo de hornear y la canela sean sin gluten."],["Hornea 40 minutos a 180 °C en un molde engrasado con aceite, sin enharinar con harina común."]],
+su:"Cambia 50 g de harina de arroz por almidón de mandioca para una miga más húmeda.",tip:"Ralla la zanahoria fina: las hebras gruesas rompen la miga."},
+{id:"bud",n:"Budín de pan",c:RE,p:"Postre",d:1,t:70,s:8,k:1,tg:["sf"],
+i:[[6,"rodajas","pan sin gluten seco"],[500,"ml","leche"],[3,"u","huevos"],[100,"g","azúcar"],[1,"cdta","esencia de vainilla"],[60,"g","pasas"],[80,"g","azúcar para el caramelo"]],
+st:[["Carameliza el azúcar en el molde."],["Remoja el pan en la leche, suma los huevos, el azúcar, la vainilla y las pasas.","Usa solo pan sin gluten: basta un trozo de pan común para contaminar el budín."],["Hornea a baño maría 50 minutos a 170 °C y deja enfriar antes de desmoldar."]],
+su:"Aprovecha el pan sin gluten que sobró; funciona mejor seco.",tip:"Si el pan está fresco, tuéstalo 10 minutos en el horno antes de remojarlo."},
+{id:"hel",n:"Helado de banana",c:RE,p:"Postre",d:1,t:10,s:2,k:0,tg:["sl","se","sf","v"],
+i:[[3,"u","plátanos maduros congelados en rodajas"],[2,"cda","cacao puro"],[1,"cda","bebida vegetal sin gluten"]],
+st:[["Procesa los plátanos congelados hasta que queden cremosos."],["Agrega el cacao y la bebida vegetal y procesa 30 segundos más.","Usa cacao puro y revisa los toppings: las galletitas y los cereales suelen llevar gluten."],["Sirve de inmediato o congela 30 minutos."]],
+su:"No lleva harina.",tip:"Congela las rodajas separadas en una bandeja para que no se peguen."},
+{id:"arp",n:"Arroz con pollo",c:RA,p:"Plato principal",d:1,t:45,s:4,k:0,tg:["sl","se","sf"],
+i:[[1.5,"tazas","arroz"],[4,"u","muslos de pollo"],[1,"u","cebolla"],[1,"u","pimiento"],[3,"tazas","caldo sin gluten"],[1,"cdta","pimentón"],[100,"g","arvejas"]],
+st:[["Dora los muslos en una olla y reserva."],["Sofríe la cebolla y el pimiento y agrega el arroz y el pimentón.","Elige un caldo sin gluten y un pimentón puro."],["Suma el caldo, el pollo y las arvejas y cocina tapado 25 minutos."]],
+su:"No lleva harina.",tip:"No destapes la olla durante la cocción: el arroz queda suelto."},
+{id:"tpa",n:"Tostadas con palta",c:RA,p:"Snack",d:1,t:10,s:1,k:2,tg:["sl","se","sf","v"],
+i:[[2,"rodajas","pan sin gluten"],[1,"u","palta"],[1,"u","limón"],[1,"pizca","sal"],[1,"cda","semillas de sésamo"]],
+st:[["Tuesta el pan en el horno o en una sartén limpia.","Evita la tostadora común: las migas de pan de trigo contaminan."],["Pisa la palta con limón y sal y unta sobre el pan."],["Termina con sésamo."]],
+su:"Usa el pan de molde de este recetario.",tip:"Un chorrito de aceite de oliva realza el sabor."},
+{id:"fid",n:"Fideos de arroz salteados",c:RA,p:"Plato principal",d:1,t:20,s:2,k:0,tg:["sl","sf"],
+i:[[200,"g","fideos de arroz"],[2,"u","huevos"],[1,"u","zanahoria"],[1,"taza","repollo en tiras"],[3,"cda","tamari sin gluten"],[1,"cda","aceite"],[1,"u","lima"]],
+st:[["Hidrata los fideos en agua caliente según el paquete y escúrrelos."],["Saltea la zanahoria y el repollo 3 minutos, suma los huevos revueltos y los fideos.","Usa tamari sin gluten: la salsa de soja común contiene trigo."],["Aliña con tamari y jugo de lima."]],
+su:"No lleva harina.",tip:"Escurre bien los fideos para que no se rompan al saltearlos."},
+{id:"hle",n:"Hamburguesas de lentejas",c:RA,p:"Plato principal",d:1,t:30,s:4,k:0,tg:["sl","se","sf","v"],
+i:[[2,"tazas","lentejas cocidas"],[3,"cda","harina de arroz"],[1,"u","cebolla rallada"],[1,"diente","ajo"],[1,"cdta","comino"],[1,"cdta","sal"]],
+st:[["Pisa las lentejas y mezcla con la cebolla, el ajo, el comino, la sal y la harina."],["Forma 4 hamburguesas.","Si las sirves en pan, usa pan sin gluten y una plancha limpia."],["Cocina 4 minutos por lado en sartén con un poco de aceite."]],
+su:"Cambia la harina de arroz por almidón de maíz.",tip:"Refrigera la mezcla 15 minutos antes de formarlas para que no se rompan."},
+{id:"fru",n:"Tarta de frutillas",c:FE,p:"Postre",d:2,t:90,s:8,k:1,tg:["sf"],
+i:[[250,"g","premezcla sin gluten"],[100,"g","manteca fría"],[40,"g","azúcar"],[1,"u","huevo"],[500,"ml","leche"],[4,"u","yemas"],[100,"g","azúcar para la crema"],[40,"g","almidón de maíz"],[400,"g","frutillas"]],
+st:[["Une la premezcla con la manteca, el azúcar y el huevo. Refrigera 30 minutos y forra un molde engrasado con manteca."],["Prehornea 15 minutos a 180 °C.","No enharines el molde con harina común."],["Cocina la leche con las yemas, el azúcar y el almidón hasta espesar. Deja enfriar y vierte sobre la base."],["Decora con las frutillas."]],
+su:"Si tu premezcla no trae aglutinante, suma ½ cdta de goma xantana a la masa.",tip:"Pinta las frutillas con mermelada tibia para que brillen."},
+{id:"poh",n:"Pollo al horno con papas",c:FE,p:"Plato principal",d:1,t:80,s:6,k:0,tg:["sl","se","sf"],
+i:[[1.5,"kg","pollo troceado"],[800,"g","papas"],[3,"cda","aceite"],[1,"cdta","pimentón"],[1,"cdta","orégano"],[4,"dientes","ajo"]],
+st:[["Mezcla el pollo y las papas con el aceite, el ajo y los condimentos.","Revisa que el pimentón y el orégano sean puros: algunas mezclas de condimentos llevan harina."],["Hornea 60 a 70 minutos a 200 °C, dando vuelta una vez."]],
+su:"No lleva harina.",tip:"Seca el pollo con papel antes de condimentarlo para que la piel quede crocante."},
+{id:"epa",n:"Ensalada de papas",c:FE,p:"Plato principal",d:1,t:40,s:8,k:0,tg:["sl","sf"],
+i:[[800,"g","papas"],[3,"u","huevos duros"],[3,"cda","mayonesa sin gluten"],[2,"cda","cebolla de verdeo"],[1,"u","zanahoria cocida"],[1,"cdta","sal"]],
+st:[["Hierve las papas con cáscara 20 minutos, pélalas y córtalas en cubos."],["Mezcla con los huevos, la zanahoria, la cebolla y la mayonesa.","Revisa la etiqueta de la mayonesa: algunas marcas llevan almidones con gluten."]],
+su:"No lleva harina.",tip:"Aliña mientras las papas aún están tibias: absorben mejor el sabor."}
+];
+const TG={sl:"Sin lactosa",se:"Sin huevo",sf:"Sin frutos secos",v:"Vegano"},RK=["Bajo","Medio","Alto"],DF=["Fácil","Media","Difícil"];
+const TERMS=[["trigo","Contiene gluten."],["centeno","Contiene gluten."],["cebada","Contiene gluten."],["malta","Suele venir de cebada."],["espelta","Variedad de trigo."],["kamut","Variedad de trigo."],["triticale","Híbrido de trigo y centeno."],["semola","Derivada del trigo."],["cuscus","Se hace con sémola de trigo."],["bulgur","Trigo partido."],["seitan","Es gluten de trigo concentrado."],["almidon modificado","Si no indica el origen, puede ser trigo."],["proteina vegetal hidrolizada","Puede venir de trigo."],["dextrina","Revisa el origen del cereal."],["salsa de soja","Suele llevar trigo; busca tamari sin gluten."],["cerveza","Se elabora con cebada."],["avena","Puede contaminarse con trigo; elige avena certificada sin gluten."]];
+const BIND=[["Goma xantana","Da elasticidad y retiene el gas en panes y pizzas. Referencia: 1 cdta por cada 250 g de mezcla en panes, y la mitad en bizcochos."],["Psyllium husk","Aporta humedad y una miga flexible. Hidrátalo 5 a 10 minutos en agua antes de mezclar. Muy útil en panes veganos."],["Almidón de maíz","Aligera la miga y suaviza. Ideal en galletas, bizcochos y para espesar salsas."],["Fécula de mandioca o tapioca","Da elasticidad y bordes crocantes. Es la base del pan de queso y mejora pizzas y empanadas."]];
+const OUT=[["Antes de salir","Elige el lugar con anticipación y llama para confirmar si ofrecen opciones sin gluten. Pide ver el menú o la carta de alérgenos."],["En la mesa","Avisa que es celiaquía o intolerancia, no una preferencia. Pregunta por freidoras compartidas, planchas, tablas, y si la salsa o el caldo llevan harina."],["Al viajar","Lleva snacks seguros y una tarjeta con tu restricción en el idioma local. Si puedes, reserva alojamiento con cocina y ubica supermercados cercanos."],["Si dudas","Si el personal no puede asegurar el plato, elige algo simple y sin salsas (carne a la plancha, arroz, ensalada) o no lo comas."]];
+const $=s=>document.querySelector(s);
+const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const fmt=n=>Number.isInteger(n)?n:String(+n.toFixed(1)).replace(".",",");
+let fav=ld("ms_fav",[]),notes=ld("ms_notes",{}),S={v:"R",open:null,por:{},flags:ld("ms_flags",{}),chk:{}};
+Object.keys(S.flags).forEach(k=>{if(!TG[k])delete S.flags[k]});
+let shop=ld("ms_shop",{it:[],dn:{}});
+let plan=ld("ms_plan",null);if(!Array.isArray(plan)||plan.length!=7)plan=[[],[],[],[],[],[],[]];
+
+const cats=[...new Set(R.map(r=>r.c))],types=[...new Set(R.map(r=>r.p))];
+$("#cat").innerHTML='<option value="">Todas</option>'+cats.map(c=>`<option>${c}</option>`).join("");
+$("#type").innerHTML='<option value="">Todos</option>'+types.map(c=>`<option>${c}</option>`).join("");
+$("#chips").innerHTML=Object.keys(TG).map(k=>`<label><input type="checkbox" data-k="${k}"${S.flags[k]?" checked":""}>${TG[k]}</label>`).join("")+'<button class="btn2" id="fclr" style="border-radius:99px;padding:.35rem .8rem;font-size:.9rem">Limpiar filtros</button>';
+$("#terms").innerHTML=TERMS.map(t=>`<li><b>${t[0]}</b><br>${t[1]}</li>`).join("");
+$("#bind").innerHTML=BIND.map(b=>`<article class="box"><h3>${b[0]}</h3><p style="margin:0">${b[1]}</p></article>`).join("");
+$("#out").innerHTML=OUT.map(b=>`<article class="box"><h3>${b[0]}</h3><p style="margin:0">${b[1]}</p></article>`).join("");
+
+const risk=k=>`<div class="rkw"><span class="rk r${k}" aria-hidden="true"><i></i><i></i><i></i></span>Riesgo de contaminación cruzada: ${RK[k]}</div>`;
+const facts=r=>`<ul class="facts"><li>Dificultad: ${DF[r.d-1]}</li><li>${r.t} min</li><li>${r.s} porciones</li></ul>`;
+const tags=r=>`<div class="tg">${["Sin gluten",...r.tg.map(x=>TG[x])].map(x=>`<span>${x}</span>`).join("")}</div>`;
+const favBtn=id=>`<button class="fav" data-f="${id}" aria-pressed="${fav.includes(id)}" aria-label="Guardar en favoritos">${fav.includes(id)?"♥":"♡"}</button>`;
+const V=b=>`<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">${b}</svg>`;
+const IMG={
+pan:V(`<rect width="72" height="72" fill="#f1e3c6"/><rect x="14" y="32" width="44" height="26" rx="4" fill="#b9732f"/><path d="M11 36Q9 18 36 18Q63 18 61 36Z" fill="#d9a05a"/><path d="M26 22v10M36 21v11M46 22v10" stroke="#b9732f" stroke-width="2" stroke-linecap="round"/>`),
+pizza:V(`<rect width="72" height="72" fill="#f6e6d3"/><circle cx="36" cy="36" r="27" fill="#e0a95c"/><circle cx="36" cy="36" r="22" fill="#d4512f"/><circle cx="28" cy="30" r="7" fill="#f6dd8a"/><circle cx="43" cy="33" r="7" fill="#f6dd8a"/><circle cx="34" cy="45" r="7" fill="#f6dd8a"/><circle cx="30" cy="31" r="2" fill="#3f8f4a"/><circle cx="44" cy="35" r="2" fill="#3f8f4a"/><circle cx="35" cy="46" r="2" fill="#3f8f4a"/>`),
+emp:V(`<rect width="72" height="72" fill="#efe0c8"/><path d="M12 48Q12 24 36 24Q60 24 60 48Z" fill="#d79a4b"/><path d="M12 48H60" stroke="#a96a28" stroke-width="4" stroke-dasharray="3 3"/><path d="M24 38Q36 30 48 38" stroke="#e9b872" stroke-width="3" fill="none" stroke-linecap="round"/>`),
+biz:V(`<rect width="72" height="72" fill="#f7ead2"/><ellipse cx="36" cy="52" rx="27" ry="8" fill="#f3c97a"/><path d="M10 50V38Q10 26 36 26Q62 26 62 38V50Q62 59 36 59Q10 59 10 50Z" fill="#e8a33d"/><path d="M10 38Q10 26 36 26Q62 26 62 38Q50 42 36 40Q22 42 10 38Z" fill="#fff3cf"/><circle cx="58" cy="16" r="8" fill="#f28a1e"/><circle cx="58" cy="16" r="5" fill="#ffc15e"/>`),
+alf:V(`<rect width="72" height="72" fill="#f1e4d3"/><ellipse cx="36" cy="50" rx="24" ry="8" fill="#efd9ac"/><rect x="12" y="40" width="48" height="10" fill="#9a5b2b"/><ellipse cx="36" cy="40" rx="24" ry="8" fill="#efd9ac"/><circle cx="28" cy="39" r="1.6" fill="#fff"/><circle cx="37" cy="41" r="1.6" fill="#fff"/><circle cx="45" cy="38" r="1.6" fill="#fff"/>`),
+arroz:V(`<rect width="72" height="72" fill="#e8efe0"/><path d="M10 36H62Q60 58 36 58Q12 58 10 36Z" fill="#5c8f6a"/><ellipse cx="36" cy="36" rx="26" ry="9" fill="#f6efd8"/><circle cx="26" cy="34" r="3" fill="#f0833a"/><circle cx="40" cy="32" r="3" fill="#f0833a"/><circle cx="48" cy="36" r="3" fill="#f0833a"/><circle cx="32" cy="38" r="2.2" fill="#5fb04f"/><circle cx="44" cy="39" r="2.2" fill="#5fb04f"/><circle cx="22" cy="38" r="2.2" fill="#5fb04f"/><rect x="33" y="31" width="5" height="5" fill="#d9412b"/>`),
+cup:V(`<rect width="72" height="72" fill="#f7e1ea"/><path d="M20 40H52L48 62H24Z" fill="#e24d7f"/><path d="M28 40L29 62M36 40V62M44 40L43 62" stroke="#f08bb0" stroke-width="2"/><path d="M16 42Q14 30 26 28Q26 18 36 16Q46 18 46 28Q58 30 56 42Z" fill="#fff"/><circle cx="31" cy="32" r="1.8" fill="#f2b134"/><circle cx="41" cy="30" r="1.8" fill="#3f8f4a"/><circle cx="36" cy="37" r="1.8" fill="#e24d7f"/><circle cx="36" cy="13" r="4" fill="#d9262b"/>`)};
+Object.assign(IMG,{
+pq:V(`<rect width="72" height="72" fill="#f6e8c9"/><circle cx="25" cy="44" r="13" fill="#e0a244"/><circle cx="47" cy="44" r="13" fill="#e8b25a"/><circle cx="36" cy="26" r="13" fill="#eebb66"/><circle cx="31" cy="22" r="3" fill="#f8dc9c"/><circle cx="20" cy="40" r="2.5" fill="#f4cf87"/><circle cx="42" cy="40" r="2.5" fill="#f4cf87"/>`),
+noq:V(`<rect width="72" height="72" fill="#f3ecd9"/><circle cx="36" cy="36" r="28" fill="#fff"/><ellipse cx="28" cy="30" rx="9" ry="6" fill="#f0dcaa" transform="rotate(-25 28 30)"/><ellipse cx="44" cy="32" rx="9" ry="6" fill="#f0dcaa" transform="rotate(20 44 32)"/><ellipse cx="34" cy="44" rx="9" ry="6" fill="#f0dcaa" transform="rotate(-5 34 44)"/><circle cx="36" cy="36" r="5" fill="#d4512f"/><circle cx="36" cy="36" r="2" fill="#3f8f4a"/>`),
+tart:V(`<rect width="72" height="72" fill="#f1e3c6"/><circle cx="36" cy="36" r="27" fill="#b9732f"/><circle cx="36" cy="36" r="23" fill="#e6b968"/><circle cx="36" cy="36" r="18" fill="#7bab5e"/><circle cx="30" cy="31" r="4" fill="#f2d36b"/><circle cx="42" cy="38" r="4" fill="#f2d36b"/><circle cx="32" cy="42" r="3" fill="#d9663a"/>`),
+tort:V(`<rect width="72" height="72" fill="#f4ecc9"/><circle cx="28" cy="40" r="20" fill="#e8c35e"/><circle cx="42" cy="34" r="20" fill="#f0d273"/><circle cx="36" cy="28" r="2" fill="#b98a2e"/><circle cx="48" cy="40" r="2" fill="#b98a2e"/><circle cx="40" cy="44" r="2" fill="#b98a2e"/><circle cx="26" cy="46" r="2" fill="#b98a2e"/>`),
+foc:V(`<rect width="72" height="72" fill="#efe3c9"/><rect x="8" y="18" width="56" height="38" rx="9" fill="#dca55a"/><g fill="#b9732f"><circle cx="20" cy="30" r="2.5"/><circle cx="34" cy="28" r="2.5"/><circle cx="48" cy="31" r="2.5"/><circle cx="27" cy="44" r="2.5"/><circle cx="41" cy="45" r="2.5"/><circle cx="54" cy="43" r="2.5"/></g><path d="M18 36l4-3M44 36l4-3M32 50l4-3" stroke="#4f8f4a" stroke-width="2" stroke-linecap="round"/>`),
+tall:V(`<rect width="72" height="72" fill="#f7ecd6"/><path d="M10 36H62Q60 58 36 58Q12 58 10 36Z" fill="#c9573a"/><ellipse cx="36" cy="36" rx="26" ry="9" fill="#f3d98a"/><path d="M16 36Q24 30 30 36T44 36T56 36" stroke="#d9b24e" stroke-width="2.5" fill="none"/><path d="M18 40Q26 34 32 40T46 40" stroke="#d9b24e" stroke-width="2" fill="none"/><circle cx="36" cy="33" r="4" fill="#d4512f"/>`),
+gall:V(`<rect width="72" height="72" fill="#f3e6d3"/><circle cx="28" cy="42" r="18" fill="#d9a560"/><circle cx="44" cy="32" r="18" fill="#e3b26e"/><g fill="#5a3520"><circle cx="22" cy="38" r="2.4"/><circle cx="30" cy="48" r="2.4"/><circle cx="29" cy="36" r="2.4"/><circle cx="40" cy="26" r="2.4"/><circle cx="51" cy="34" r="2.4"/><circle cx="44" cy="40" r="2.4"/></g>`),
+brow:V(`<rect width="72" height="72" fill="#efe0d3"/><rect x="10" y="30" width="36" height="28" rx="4" fill="#4a2a18"/><rect x="24" y="14" width="36" height="28" rx="4" fill="#5e3820"/><path d="M30 24l8 2 8-2M30 34l10 2 10-2" stroke="#7a4d2e" stroke-width="2" fill="none" stroke-linecap="round"/>`),
+crep:V(`<rect width="72" height="72" fill="#f9edd5"/><circle cx="36" cy="38" r="28" fill="#fff"/><path d="M36 54L12 28Q36 12 60 28Z" fill="#efc267"/><path d="M36 54L26 21M36 54L46 21" stroke="#d9a23f" stroke-width="2"/><circle cx="36" cy="30" r="5" fill="#d9262b"/><circle cx="26" cy="36" r="3" fill="#d9262b"/><circle cx="46" cy="36" r="3" fill="#d9262b"/>`),
+chur:V(`<rect width="72" height="72" fill="#f3e1c8"/><path d="M14 52L40 20M26 56L52 24M38 58L62 30" stroke="#d98a3a" stroke-width="9" stroke-linecap="round"/><path d="M14 52L40 20M26 56L52 24M38 58L62 30" stroke="#f0b565" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 4"/><circle cx="48" cy="44" r="1.5" fill="#fff"/><circle cx="22" cy="40" r="1.5" fill="#fff"/><circle cx="58" cy="50" r="1.5" fill="#fff"/>`),
+mufp:V(`<rect width="72" height="72" fill="#f6e8d0"/><path d="M20 40H52L48 62H24Z" fill="#6d9bd1"/><path d="M28 40L29 62M36 40V62M44 40L43 62" stroke="#9bbce3" stroke-width="2"/><path d="M14 42Q12 22 36 20Q60 22 58 42Z" fill="#c98a45"/><circle cx="36" cy="27" r="5" fill="#f2d36b"/><circle cx="24" cy="34" r="1.6" fill="#a8672a"/><circle cx="48" cy="33" r="1.6" fill="#a8672a"/>`),
+flo:V(`<rect width="72" height="72" fill="#f1e0d6"/><ellipse cx="36" cy="50" rx="26" ry="9" fill="#3b1f12"/><rect x="10" y="32" width="52" height="18" fill="#4a2a18"/><ellipse cx="36" cy="32" rx="26" ry="9" fill="#5e3820"/><ellipse cx="36" cy="32" rx="20" ry="6" fill="#3b1f12"/><circle cx="36" cy="30" r="4" fill="#c4263a"/><circle cx="26" cy="32" r="1.4" fill="#fff"/><circle cx="46" cy="33" r="1.4" fill="#fff"/>`),
+tor:V(`<rect width="72" height="72" fill="#f3e8c8"/><circle cx="36" cy="38" r="28" fill="#fff"/><circle cx="36" cy="38" r="22" fill="#f2cf5d" stroke="#d9a23a" stroke-width="3"/><path d="M36 38V16M36 38L55 49" stroke="#d9a23a" stroke-width="2"/><g fill="#f8e29a"><circle cx="28" cy="32" r="3"/><circle cx="44" cy="30" r="3"/><circle cx="30" cy="46" r="3"/><circle cx="46" cy="44" r="3"/></g>`),
+quin:V(`<rect width="72" height="72" fill="#eef0dc"/><path d="M10 34H62Q60 58 36 58Q12 58 10 34Z" fill="#7aa86b"/><ellipse cx="36" cy="34" rx="26" ry="9" fill="#e8d3a0"/><circle cx="26" cy="33" r="4" fill="#d4512f"/><circle cx="46" cy="34" r="4" fill="#d4512f"/><circle cx="36" cy="31" r="7" fill="#fff"/><circle cx="36" cy="31" r="3.2" fill="#f2b134"/><circle cx="30" cy="38" r="2.5" fill="#5fb04f"/><circle cx="43" cy="39" r="2.5" fill="#5fb04f"/>`),
+alb:V(`<rect width="72" height="72" fill="#f4e6d5"/><circle cx="36" cy="38" r="28" fill="#fff"/><ellipse cx="36" cy="42" rx="20" ry="11" fill="#f6efd8"/><circle cx="27" cy="34" r="8" fill="#b9763a"/><circle cx="43" cy="34" r="8" fill="#c58542"/><circle cx="35" cy="45" r="8" fill="#b9763a"/><circle cx="25" cy="31" r="2" fill="#dca66a"/><circle cx="41" cy="31" r="2" fill="#dca66a"/><circle cx="33" cy="42" r="2" fill="#dca66a"/><circle cx="36" cy="30" r="1.8" fill="#3f8f4a"/>`),
+len:V(`<rect width="72" height="72" fill="#f1e4cf"/><path d="M28 24Q24 18 28 12M40 24Q36 18 40 12" stroke="#b5b5b5" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M10 34H62Q60 58 36 58Q12 58 10 34Z" fill="#4a7fa8"/><ellipse cx="36" cy="34" rx="26" ry="9" fill="#c98a3d"/><g fill="#7a4a20"><circle cx="24" cy="33" r="1.8"/><circle cx="32" cy="36" r="1.8"/><circle cx="40" cy="32" r="1.8"/><circle cx="48" cy="35" r="1.8"/><circle cx="36" cy="38" r="1.8"/></g><circle cx="28" cy="31" r="2.5" fill="#f0833a"/><circle cx="44" cy="37" r="2.5" fill="#f0833a"/>`),
+gar:V(`<rect width="72" height="72" fill="#e8f0e0"/><path d="M10 34H62Q60 58 36 58Q12 58 10 34Z" fill="#fff"/><ellipse cx="36" cy="34" rx="26" ry="9" fill="#f1e2b8"/><g fill="#e3c07a"><circle cx="24" cy="34" r="3.5"/><circle cx="34" cy="37" r="3.5"/><circle cx="46" cy="35" r="3.5"/></g><circle cx="28" cy="31" r="3.5" fill="#7bb35a"/><circle cx="41" cy="31" r="3.5" fill="#7bb35a"/><circle cx="36" cy="32" r="3.5" fill="#d4512f"/><circle cx="52" cy="33" r="3" fill="#a45db0"/>`),
+past:V(`<rect width="72" height="72" fill="#f6e6d3"/><circle cx="36" cy="38" r="28" fill="#fff"/><circle cx="36" cy="38" r="15" fill="none" stroke="#f0d58a" stroke-width="9"/><circle cx="36" cy="38" r="15" fill="none" stroke="#dcb862" stroke-width="1.5" stroke-dasharray="5 4"/><circle cx="36" cy="38" r="8" fill="#d4512f"/><circle cx="36" cy="36" r="2.5" fill="#3f8f4a"/>`),
+pdn:V(`<rect width="72" height="72" fill="#e6e4f5"/><path d="M18 40H54V60H18Z" fill="#c9332f"/><path d="M14 42Q12 12 36 12Q60 12 58 42Z" fill="#d9a05a"/><circle cx="28" cy="26" r="2.6" fill="#d9262b"/><circle cx="40" cy="22" r="2.6" fill="#3f8f4a"/><circle cx="46" cy="33" r="2.6" fill="#d9262b"/><circle cx="32" cy="35" r="2.6" fill="#f2b134"/><circle cx="24" cy="36" r="2.6" fill="#3f8f4a"/><circle cx="50" cy="26" r="1.6" fill="#fff"/><circle cx="34" cy="18" r="1.6" fill="#fff"/>`),
+jen:V(`<rect width="72" height="72" fill="#e6e4f5"/><g fill="#b9732f"><circle cx="36" cy="16" r="9"/><rect x="26" y="24" width="20" height="22" rx="6"/><rect x="10" y="26" width="22" height="9" rx="4.5"/><rect x="40" y="26" width="22" height="9" rx="4.5"/><rect x="26" y="42" width="9" height="20" rx="4.5"/><rect x="37" y="42" width="9" height="20" rx="4.5"/></g><g fill="#fff"><circle cx="32" cy="15" r="1.5"/><circle cx="40" cy="15" r="1.5"/><circle cx="36" cy="31" r="2"/><circle cx="36" cy="38" r="2"/></g><path d="M32 20Q36 23 40 20" stroke="#fff" stroke-width="1.5" fill="none"/>`),
+tcum:V(`<rect width="72" height="72" fill="#e6e4f5"/><rect x="12" y="38" width="48" height="20" rx="4" fill="#f6d28a"/><rect x="12" y="32" width="48" height="10" rx="4" fill="#ff8fb3"/><path d="M16 40Q18 48 22 40M30 40Q32 47 35 40M46 40Q48 48 52 40" fill="#ff8fb3"/><rect x="34" y="16" width="4" height="16" fill="#e24d7f"/><ellipse cx="36" cy="12" rx="3" ry="4.5" fill="#f2b134"/><circle cx="20" cy="36" r="1.5" fill="#fff"/><circle cx="48" cy="35" r="1.5" fill="#fff"/><circle cx="28" cy="35" r="1.5" fill="#f2b134"/>`),
+pizz:V(`<rect width="72" height="72" fill="#e6e4f5"/><g><circle cx="22" cy="24" r="12" fill="#e0a95c"/><circle cx="22" cy="24" r="9" fill="#d4512f"/><circle cx="22" cy="24" r="5" fill="#f6dd8a"/></g><g><circle cx="50" cy="24" r="12" fill="#e0a95c"/><circle cx="50" cy="24" r="9" fill="#d4512f"/><circle cx="50" cy="24" r="5" fill="#f6dd8a"/></g><g><circle cx="36" cy="50" r="12" fill="#e0a95c"/><circle cx="36" cy="50" r="9" fill="#d4512f"/><circle cx="36" cy="50" r="5" fill="#f6dd8a"/></g>`),
+truf:V(`<rect width="72" height="72" fill="#e6e4f5"/><circle cx="24" cy="42" r="13" fill="#4a2a18"/><circle cx="47" cy="42" r="13" fill="#5e3820"/><circle cx="35" cy="24" r="13" fill="#4a2a18"/><circle cx="20" cy="38" r="3" fill="#8a5a3a"/><circle cx="43" cy="38" r="3" fill="#8a5a3a"/><circle cx="31" cy="20" r="3" fill="#8a5a3a"/>`)
+});
+Object.assign(IMG,{
+bun:V(`<rect width="72" height="72" fill="#f1e3c6"/><path d="M10 38Q10 12 36 12Q62 12 62 38Z" fill="#d9a05a"/><g fill="#fff3d6"><ellipse cx="26" cy="22" rx="2" ry="1.2"/><ellipse cx="38" cy="18" rx="2" ry="1.2"/><ellipse cx="46" cy="26" rx="2" ry="1.2"/><ellipse cx="34" cy="28" rx="2" ry="1.2"/></g><rect x="8" y="38" width="56" height="6" rx="3" fill="#6fb04f"/><rect x="10" y="44" width="52" height="9" rx="4" fill="#5e3820"/><rect x="10" y="53" width="52" height="9" rx="4.5" fill="#d9a05a"/>`),
+cmz:V(`<rect width="72" height="72" fill="#f6ecc0"/><rect x="10" y="22" width="52" height="36" rx="6" fill="#e8b93a"/><rect x="14" y="26" width="44" height="12" rx="5" fill="#f4d36b"/><path d="M27 22V58M45 22V58" stroke="#c99a22" stroke-width="2"/>`),
+rav:V(`<rect width="72" height="72" fill="#f3ecd9"/><circle cx="36" cy="38" r="28" fill="#fff"/><g fill="#f1dfae" stroke="#d9bd78" stroke-width="2" stroke-dasharray="3 2"><rect x="16" y="24" width="18" height="18" rx="2" transform="rotate(-10 25 33)"/><rect x="38" y="22" width="18" height="18" rx="2" transform="rotate(12 47 31)"/><rect x="27" y="42" width="18" height="18" rx="2" transform="rotate(4 36 51)"/></g><circle cx="36" cy="40" r="3" fill="#d4512f"/>`),
+pit:V(`<rect width="72" height="72" fill="#efe3c9"/><circle cx="36" cy="36" r="26" fill="#ecd29a"/><path d="M12 36Q36 22 60 36" stroke="#c9a458" stroke-width="2.5" fill="none"/><circle cx="26" cy="46" r="3" fill="#c9a458"/><circle cx="46" cy="48" r="3" fill="#c9a458"/><circle cx="40" cy="28" r="2.5" fill="#c9a458"/>`),
+flan:V(`<rect width="72" height="72" fill="#f6e8d0"/><ellipse cx="36" cy="54" rx="27" ry="7" fill="#fff"/><path d="M14 52Q16 30 36 28Q56 30 58 52Z" fill="#f6d78a"/><path d="M17 40Q22 28 36 28Q50 28 55 40Q46 44 36 42Q26 44 17 40Z" fill="#b9732f"/>`),
+mou:V(`<rect width="72" height="72" fill="#f1e0d6"/><path d="M18 22H54L48 60H24Z" fill="#cfe0f0"/><path d="M21 32H51L47 57H25Z" fill="#5e3820"/><ellipse cx="36" cy="27" rx="13" ry="6" fill="#fff"/><path d="M34 21L40 13L44 22Z" fill="#4a2a18"/>`),
+mer:V(`<rect width="72" height="72" fill="#f6e1ea"/><g fill="#fff" stroke="#f3cdd9" stroke-width="1.5"><path d="M10 58Q8 44 18 40Q14 34 22 28Q30 34 26 40Q36 44 34 58Z"/><path d="M38 58Q36 44 46 40Q42 34 50 28Q58 34 54 40Q64 44 62 58Z"/></g><circle cx="22" cy="48" r="2" fill="#f7a8c4"/><circle cx="50" cy="48" r="2" fill="#f7a8c4"/>`),
+lem:V(`<rect width="72" height="72" fill="#f8f0c8"/><circle cx="36" cy="38" r="27" fill="#c98a45"/><circle cx="36" cy="38" r="22" fill="#f6e36a"/><path d="M36 38V16M36 38L55 49M36 38L17 49" stroke="#e1c840" stroke-width="2"/><circle cx="36" cy="38" r="8" fill="#fff8b0"/><circle cx="36" cy="38" r="5.5" fill="#f2d340"/>`),
+wrp:V(`<rect width="72" height="72" fill="#e8efe0"/><g transform="rotate(-30 36 36)"><rect x="12" y="24" width="48" height="24" rx="12" fill="#f0d273"/><circle cx="52" cy="36" r="9" fill="#7bb35a"/><circle cx="50" cy="34" r="3.5" fill="#d4512f"/><circle cx="54" cy="39" r="3" fill="#f6efd8"/></g>`),
+ome:V(`<rect width="72" height="72" fill="#f3e8c8"/><circle cx="36" cy="38" r="28" fill="#fff"/><path d="M12 42Q14 20 36 20Q58 20 60 42Q36 54 12 42Z" fill="#f4cf4e"/><path d="M14 40Q36 52 58 40" stroke="#5fa04a" stroke-width="4" fill="none"/><circle cx="30" cy="30" r="1.8" fill="#5fa04a"/><circle cx="44" cy="28" r="1.8" fill="#5fa04a"/>`),
+sal:V(`<rect width="72" height="72" fill="#e8f0e0"/><path d="M10 34H62Q60 58 36 58Q12 58 10 34Z" fill="#3f7fa8"/><ellipse cx="36" cy="34" rx="26" ry="9" fill="#f6efd8"/><rect x="18" y="30" width="14" height="8" rx="3" fill="#f08a6a" transform="rotate(-12 25 34)"/><rect x="34" y="29" width="14" height="8" rx="3" fill="#f4a083" transform="rotate(8 41 33)"/><ellipse cx="52" cy="35" rx="5" ry="3.5" fill="#8fc460"/><circle cx="30" cy="40" r="2.5" fill="#4f8f4a"/>`),
+zap:V(`<rect width="72" height="72" fill="#fbe8cf"/><path d="M28 24Q24 18 28 12M40 24Q36 18 40 12" stroke="#c9b9a0" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M10 34H62Q60 58 36 58Q12 58 10 34Z" fill="#fff"/><ellipse cx="36" cy="34" rx="26" ry="9" fill="#f2a33a"/><path d="M26 34Q36 28 46 34" stroke="#fff3df" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="32" cy="37" r="1.5" fill="#5f8f3a"/><circle cx="42" cy="38" r="1.5" fill="#5f8f3a"/>`),
+man:V(`<rect width="72" height="72" fill="#e6e4f5"/><circle cx="36" cy="36" r="27" fill="#b9732f"/><circle cx="36" cy="36" r="22" fill="#e8c27a"/><circle cx="36" cy="36" r="16" fill="none" stroke="#d98a3a" stroke-width="6" stroke-dasharray="7 2"/><circle cx="36" cy="36" r="8" fill="none" stroke="#d98a3a" stroke-width="5" stroke-dasharray="6 2"/><circle cx="36" cy="36" r="2.5" fill="#c4263a"/>`),
+che:V(`<rect width="72" height="72" fill="#e6e4f5"/><path d="M10 58H62V48H10Z" fill="#9a5b2b"/><path d="M10 48H62V30Q36 24 10 30Z" fill="#f8e7b8"/><path d="M10 31Q36 25 62 31V35Q50 41 40 35Q30 41 24 35Q16 41 10 35Z" fill="#c4263a"/><circle cx="36" cy="22" r="5" fill="#d9262b"/><path d="M33 18L36 15L39 18Z" fill="#3f8f4a"/>`),
+bru:V(`<rect width="72" height="72" fill="#e6e4f5"/><rect x="8" y="24" width="30" height="30" rx="7" fill="#d9a05a"/><rect x="36" y="20" width="28" height="30" rx="7" fill="#e0a95c" transform="rotate(8 50 35)"/><g fill="#d4512f"><circle cx="18" cy="34" r="3.5"/><circle cx="26" cy="40" r="3.5"/><circle cx="20" cy="46" r="3.5"/><circle cx="52" cy="32" r="3.5"/><circle cx="44" cy="38" r="3.5"/><circle cx="56" cy="42" r="3.5"/></g><circle cx="28" cy="32" r="2.5" fill="#3f8f4a"/><circle cx="48" cy="26" r="2.5" fill="#3f8f4a"/>`)
+});
+Object.assign(IMG,{
+cal:V(`<rect width="72" height="72" fill="#f1e3c6"/><path d="M10 48Q10 20 36 20Q62 20 62 48Z" fill="#dca55a"/><path d="M10 48H62" stroke="#a96a28" stroke-width="4" stroke-dasharray="3 3"/><path d="M26 36Q36 30 46 36" stroke="#efc27a" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="36" cy="58" r="4" fill="#d4512f"/>`),
+nan:V(`<rect width="72" height="72" fill="#f4e8d0"/><path d="M36 8Q58 28 54 52Q36 64 18 52Q14 28 36 8Z" fill="#efd49c"/><g fill="#b9873a"><circle cx="30" cy="30" r="2.5"/><circle cx="42" cy="38" r="2.5"/><circle cx="32" cy="46" r="2.5"/></g><circle cx="38" cy="26" r="1.8" fill="#5fa04a"/><circle cx="28" cy="40" r="1.8" fill="#5fa04a"/>`),
+gri:V(`<rect width="72" height="72" fill="#f1e3c6"/><path d="M16 62L24 10M34 62L36 10M52 62L48 10" stroke="#dca55a" stroke-width="7" stroke-linecap="round"/><path d="M16 62L24 10M34 62L36 10M52 62L48 10" stroke="#b9873a" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 6"/>`),
+las:V(`<rect width="72" height="72" fill="#f6e6d3"/><rect x="10" y="20" width="52" height="40" rx="5" fill="#f0dcaa"/><rect x="10" y="27" width="52" height="7" fill="#b9402a"/><rect x="10" y="39" width="52" height="7" fill="#b9402a"/><rect x="10" y="51" width="52" height="5" fill="#fff4cf"/><rect x="10" y="14" width="52" height="10" rx="5" fill="#e8b25a"/>`),
+avn:V(`<rect width="72" height="72" fill="#f3e6d3"/><circle cx="28" cy="42" r="18" fill="#d1a870"/><circle cx="44" cy="32" r="18" fill="#deb987"/><g fill="#a0743a"><circle cx="20" cy="40" r="1.6"/><circle cx="32" cy="46" r="1.6"/><circle cx="26" cy="34" r="1.6"/><circle cx="48" cy="26" r="1.6"/><circle cx="40" cy="38" r="1.6"/></g><g fill="#5b3a5e"><circle cx="24" cy="46" r="2.4"/><circle cx="36" cy="28" r="2.4"/><circle cx="50" cy="38" r="2.4"/></g>`),
+zan:V(`<rect width="72" height="72" fill="#fbe8cf"/><rect x="10" y="30" width="52" height="28" rx="5" fill="#d98a3a"/><path d="M10 34Q10 24 36 24Q62 24 62 34Q50 40 36 37Q22 40 10 34Z" fill="#fff"/><path d="M52 8L58 24L46 24Z" fill="#f0833a"/><path d="M52 8L48 3M52 8L52 2M52 8L56 3" stroke="#5fa04a" stroke-width="2" stroke-linecap="round"/>`),
+bud:V(`<rect width="72" height="72" fill="#f6e8d0"/><rect x="12" y="28" width="48" height="28" rx="6" fill="#e8b25a"/><path d="M12 34Q12 26 36 26Q60 26 60 34Q48 40 36 38Q24 40 12 34Z" fill="#b9732f"/><g fill="#5b3a5e"><circle cx="24" cy="46" r="2.4"/><circle cx="38" cy="50" r="2.4"/><circle cx="50" cy="44" r="2.4"/></g>`),
+hel:V(`<rect width="72" height="72" fill="#f1e0d6"/><path d="M24 38L36 68L48 38Z" fill="#d9a05a"/><path d="M30 46L42 46M33 54L39 54" stroke="#b9732f" stroke-width="2"/><circle cx="36" cy="30" r="14" fill="#7a4d2e"/><circle cx="36" cy="17" r="9" fill="#f4d36b"/>`),
+arp:V(`<rect width="72" height="72" fill="#f3e8c8"/><circle cx="36" cy="38" r="28" fill="#fff"/><circle cx="36" cy="38" r="22" fill="#f2cf5d"/><ellipse cx="28" cy="34" rx="8" ry="6" fill="#b9763a"/><ellipse cx="44" cy="42" rx="8" ry="6" fill="#c58542"/><circle cx="42" cy="30" r="2" fill="#5fb04f"/><circle cx="30" cy="46" r="2" fill="#5fb04f"/><rect x="36" y="36" width="5" height="5" fill="#d9412b"/>`),
+tpa:V(`<rect width="72" height="72" fill="#e8f0e0"/><rect x="8" y="24" width="34" height="32" rx="7" fill="#d9a05a"/><rect x="13" y="29" width="24" height="22" rx="5" fill="#9fcf6a"/><rect x="34" y="16" width="30" height="32" rx="7" fill="#e0a95c" transform="rotate(10 49 32)"/><ellipse cx="54" cy="52" rx="8" ry="10" fill="#8fc460"/><circle cx="54" cy="55" r="4" fill="#7a4a20"/>`),
+fid:V(`<rect width="72" height="72" fill="#f7ecd6"/><path d="M10 36H62Q60 58 36 58Q12 58 10 36Z" fill="#3f8f6a"/><ellipse cx="36" cy="36" rx="26" ry="9" fill="#f3ecd0"/><path d="M16 36Q24 30 30 36T44 36T56 36" stroke="#fff" stroke-width="2.5" fill="none"/><circle cx="26" cy="35" r="3" fill="#f0833a"/><circle cx="44" cy="34" r="3" fill="#f4cf4e"/><circle cx="36" cy="38" r="3" fill="#f4cf4e"/><path d="M52 28L58 22L60 30Z" fill="#8fc460"/>`),
+hle:V(`<rect width="72" height="72" fill="#e8efe0"/><circle cx="26" cy="40" r="15" fill="#8a5a30"/><circle cx="46" cy="34" r="15" fill="#9a6a38"/><g fill="#d9a05a"><circle cx="22" cy="36" r="1.8"/><circle cx="30" cy="44" r="1.8"/><circle cx="42" cy="30" r="1.8"/><circle cx="50" cy="38" r="1.8"/></g><g fill="#5fb04f"><circle cx="28" cy="34" r="1.6"/><circle cx="46" cy="40" r="1.6"/></g>`),
+fru:V(`<rect width="72" height="72" fill="#f4e0e6"/><circle cx="36" cy="36" r="28" fill="#c98a45"/><circle cx="36" cy="36" r="23" fill="#f8e7b8"/><g fill="#d9262b"><circle cx="36" cy="16" r="5.5"/><circle cx="54" cy="26" r="5.5"/><circle cx="54" cy="46" r="5.5"/><circle cx="36" cy="56" r="5.5"/><circle cx="18" cy="46" r="5.5"/><circle cx="18" cy="26" r="5.5"/><circle cx="36" cy="30" r="5.5"/><circle cx="28" cy="42" r="5.5"/><circle cx="44" cy="42" r="5.5"/></g>`),
+poh:V(`<rect width="72" height="72" fill="#f6e6d3"/><ellipse cx="36" cy="40" rx="30" ry="22" fill="#9aa3ad"/><ellipse cx="36" cy="40" rx="26" ry="18" fill="#e8c06a"/><g fill="#f2d27a" stroke="#d9a23a" stroke-width="1.5"><circle cx="20" cy="42" r="6"/><circle cx="52" cy="44" r="6"/><circle cx="36" cy="52" r="6"/></g><g transform="rotate(-30 30 34)"><ellipse cx="30" cy="34" rx="12" ry="8" fill="#b9763a"/><rect x="40" y="31" width="12" height="5" rx="2.5" fill="#fff"/></g><g transform="rotate(20 44 32)"><ellipse cx="42" cy="32" rx="10" ry="7" fill="#c58542"/><rect x="50" y="29" width="10" height="5" rx="2.5" fill="#fff"/></g>`),
+epa:V(`<rect width="72" height="72" fill="#e6e4f5"/><path d="M10 34H62Q60 58 36 58Q12 58 10 34Z" fill="#fff"/><ellipse cx="36" cy="34" rx="26" ry="9" fill="#f6efd8"/><g fill="#f2dfa0"><rect x="18" y="31" width="6" height="6" rx="1"/><rect x="28" y="34" width="6" height="6" rx="1"/><rect x="42" y="32" width="6" height="6" rx="1"/><rect x="50" y="35" width="5" height="5" rx="1"/></g><circle cx="26" cy="29" r="2.5" fill="#f0833a"/><circle cx="46" cy="38" r="2.2" fill="#5fb04f"/><circle cx="36" cy="30" r="5" fill="#fff"/><circle cx="36" cy="30" r="2.5" fill="#f2b134"/>`)
+});
+const th=(r,big)=>`<div class="th${big?" lg":""}" role="img" aria-label="Imagen de ${r.n}">${r.img?`<img src="${r.img}" alt="">`:IMG[r.id]||V(`<rect width="72" height="72" fill="${CC[r.c]}"/><text x="36" y="48" font-size="34" text-anchor="middle">${r.e}</text>`)}</div>`;
+const card=r=>`<article class="card">${favBtn(r.id)}<div class="top">${th(r)}<div><p class="cat">${r.c}</p><h3><button class="open" data-id="${r.id}">${r.n}</button></h3></div></div>${facts(r)}${risk(r.k)}${tags(r)}${notes[r.id]?'<p class="nb">📝 Tienes notas</p>':""}</article>`;
+
+function list(){
+ const q=norm($("#q").value),c=$("#cat").value,ty=$("#type").value,t=+$("#time").value,d=+$("#diff").value;
+ const on=Object.keys(S.flags).filter(k=>S.flags[k]);
+ const rs=R.filter(r=>(!q||norm(r.n+" "+r.i.map(x=>x[2]).join(" ")).includes(q))&&(!c||r.c==c)&&(!ty||r.p==ty)&&(!t||r.t<=t)&&(!d||r.d<=d)&&on.every(k=>r.tg.includes(k)));
+ const so=$("#sort").value;if(so)rs.sort(so=="n"?(a,b)=>a.n.localeCompare(b.n,"es"):(a,b)=>a[so]-b[so]||a.n.localeCompare(b.n,"es"));
+ $("#cnt").textContent=rs.length+(rs.length==1?" receta":" recetas")+(on.length?" con tus filtros: "+on.map(k=>TG[k]).join(", "):"");
+ $("#list").innerHTML=rs.length?rs.map(card).join(""):'<p class="empty">No hay recetas con esos filtros. Prueba quitar alguno.</p>';
+}
+function favs(){
+ const rs=R.filter(r=>fav.includes(r.id));
+ $("#fl").innerHTML=rs.length?rs.map(card).join(""):'<p class="empty">Aún no guardaste recetas. Toca el corazón en cualquier receta.</p>';
+}
+function ing(r){const p=S.por[r.id]||r.s,f=p/r.s;return `<ul class="ing">${r.i.map(x=>`<li>${fmt(x[0]*f)} ${x[1]} ${x[2]}</li>`).join("")}</ul>`}
+function det(){
+ const r=R.find(x=>x.id==S.open),p=S.por[r.id]||r.s;
+ $("#det").innerHTML=`<button class="back">← Volver</button>${favBtn(r.id).replace('class="fav"','class="fav" style="position:static;float:right"')}
+ <div class="top">${th(r,1)}<div><p class="cat">${r.c}</p><h2>${r.n}</h2></div></div>${facts(r)}${risk(r.k)}<div style="margin:.6rem 0 .8rem">${tags(r)}</div>
+ <div class="acts"><button class="btn" id="cook">Modo cocina</button>${navigator.share?'<button class="btn2" id="shr">Compartir</button>':""}<a class="btn2" id="shw" href="${wa(r)}" target="_blank" rel="noopener">WhatsApp</a><button class="btn2" id="shc">Copiar receta</button></div>
+ <textarea id="shx" rows="6" hidden readonly style="margin-bottom:1rem"></textarea>
+ <div class="acts" style="align-items:flex-end"><label class="f">Agregar al menú de<select id="pdy">${DAYS.map((d,i)=>`<option value="${i}"${i==(new Date().getDay()+6)%7?" selected":""}>${d}</option>`).join("")}</select></label><button class="btn2" id="padd">Agregar al menú</button></div>
+ <div class="cols"><div><div class="box"><h3>Ingredientes</h3><div class="stp"><button data-p="-1" aria-label="Menos porciones">−</button><span><b id="pn">${p}</b> porciones</span><button data-p="1" aria-label="Más porciones">+</button></div><div id="ing">${ing(r)}</div><button class="btn" id="sadd" style="margin-top:.8rem">${shop.it.some(x=>x.id==r.id)?"Actualizar en la lista":"Agregar a la lista de compras"}</button></div>
+ <div class="box"><h3>Sustitutos de harina</h3><p style="margin:0">${r.su}</p></div></div>
+ <div>${chkHtml(r)}<h3 style="margin-bottom:.8rem">Instrucciones</h3><ol class="st">${r.st.map(s=>`<li>${s[0]}${s[1]?`<div class="warn">⚠️ <b>Nota de seguridad:</b> ${s[1]}</div>`:""}</li>`).join("")}</ol>
+ <div class="box"><h3>Tips del chef celíaco</h3><p style="margin:0">“${r.tip}”</p></div></div></div>
+ <div class="box"><h3>Mis notas</h3><label class="f" for="nt">Marca que usaste, ajustes o resultados. Solo las ves tú, en este dispositivo.</label><textarea id="nt" rows="4" maxlength="2000">${esc(notes[r.id]||"")}</textarea><p class="note" id="nts" role="status"></p></div>`;
+}
+const STAND=(()=>{try{return typeof window!="undefined"&&window.top===window}catch(e){return false}})();
+const CK={r:null,i:0,run:false,left:0,end:0,done:false,id:null,w:null};
+const mmss=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function rtxt(r){
+ const p=S.por[r.id]||r.s,f=p/r.s;
+ return r.n+" (Glutoff)\nDificultad: "+DF[r.d-1]+", "+r.t+" min, "+p+" porciones\nRiesgo de contaminación cruzada: "+RK[r.k]+"\n\nIngredientes:\n"+r.i.map(x=>"- "+fmt(x[0]*f)+" "+x[1]+" "+x[2]).join("\n")+"\n\nPasos:\n"+r.st.map((s,i)=>(i+1)+". "+s[0]+(s[1]?"\n   ⚠️ "+s[1]:"")).join("\n")+"\n\nConsejo: "+r.tip+(STAND?"\n\n"+location.href.split("#")[0]+"#"+r.id:"")
+}
+const wa=r=>"https://wa.me/?text="+encodeURIComponent(rtxt(r));
+function cp(tx,ta,done){
+ const fb=()=>{ta.hidden=false;ta.value=tx;ta.select();done(false)};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx).then(()=>done(true)).catch(fb);else fb();
+}
+function clearHash(){if(STAND&&location.hash)try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+function openR(id,push){
+ S.open=id;show("R");view();goTo($("#det"));
+ if(STAND&&push!==false)try{history.pushState({r:id},"","#"+id)}catch(e){}
+}
+function closeView(){
+ const id=S.open;S.open=null;view();clearHash();
+ const b=document.querySelector('.open[data-id="'+id+'"]');goTo(b?b.closest(".card"):$("#flt"),"center");
+}
+async function wl(on){try{if(on){if(navigator.wakeLock&&!CK.w)CK.w=await navigator.wakeLock.request("screen")}else if(CK.w){await CK.w.release();CK.w=null}}catch(e){CK.w=null}}
+function ding(){
+ try{if(navigator.vibrate)navigator.vibrate([300,150,300,150,300])}catch(e){}
+ try{const a=new (window.AudioContext||window.webkitAudioContext)();[0,.35,.7].forEach(t=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.2;o.connect(g);g.connect(a.destination);o.start(a.currentTime+t);o.stop(a.currentTime+t+.2)})}catch(e){}
+}
+function tick(){
+ const c=CK;if(!c.run)return;
+ const l=Math.max(0,Math.round((c.end-Date.now())/1000)),d=$("#ckd");
+ if(d)d.textContent=mmss(l);
+ if(l<=0){c.run=false;c.left=0;c.done=true;clearInterval(c.id);c.id=null;ding();tmr()}
+}
+function tstart(s){const c=CK;clearInterval(c.id);c.left=s;c.end=Date.now()+s*1000;c.run=true;c.done=false;c.id=setInterval(tick,500);tmr()}
+function tpause(){
+ const c=CK;
+ if(c.run){c.left=Math.max(0,Math.round((c.end-Date.now())/1000));c.run=false;clearInterval(c.id);c.id=null}
+ else if(c.left>0){c.end=Date.now()+c.left*1000;c.run=true;c.id=setInterval(tick,500)}
+ tmr();
+}
+function tclear(){const c=CK;clearInterval(c.id);c.id=null;c.run=false;c.left=0;c.end=0;c.done=false;tmr()}
+function tmr(){
+ const c=CK,m=$("#ckm");if(!m)return;
+ if(!c.run&&!c.left&&!c.done){m.innerHTML="";return}
+ const l=c.run?Math.max(0,Math.round((c.end-Date.now())/1000)):c.left;
+ m.innerHTML=`<div class="box" style="text-align:center"><div class="ckd" id="ckd">${mmss(l)}</div>${c.done?'<p role="status"><b>¡Tiempo!</b></p>':""}<div class="acts" style="justify-content:center">${c.done?"":`<button class="btn2" id="ctp">${c.run?"Pausar":"Reanudar"}</button>`}<button class="btn2" id="ctr">${c.done?"Cerrar aviso":"Quitar"}</button></div></div>`;
+}
+function ckr(){
+ if(CK.i<0){ckc();return}
+ const c=CK,r=c.r,n=r.st.length,s=r.st[c.i],last=c.i==n-1,p=S.por[r.id]||r.s;
+ const seen={},tm=[];
+ for(const m of s[0].matchAll(/(\d+)(?:\s*a\s*\d+)?\s*(segundos?|minutos?|horas?)/g)){
+  const secs=+m[1]*(m[2][0]=="h"?3600:m[2][0]=="m"?60:1);
+  if(!seen[secs]&&tm.length<3){seen[secs]=1;tm.push({s:secs,l:m[0]})}
+ }
+ $("#ck").innerHTML=`<div class="ckw"><div class="ckh"><b id="ckt" tabindex="-1">${r.n}</b><button class="btn2" id="ckx">Cerrar</button></div>
+<div class="ckp" aria-hidden="true"><i style="width:${(c.i+1)/n*100}%"></i></div>
+<p class="note">Paso ${c.i+1} de ${n}</p>
+<p class="cks">${s[0]}</p>
+${s[1]?`<div class="warn">⚠️ <b>Nota de seguridad:</b> ${s[1]}</div>`:""}
+<div class="acts">${tm.map(x=>`<button class="btn2" data-ct="${x.s}">⏱ ${x.l}</button>`).join("")}</div>
+<div id="ckm"></div>
+<details class="box"><summary>Ingredientes (${p} porciones)</summary>${ing(r)}</details>
+<div class="ckn"><button class="btn2" id="ckb">Anterior</button><button class="btn" id="ckf">${last?"Terminar":"Siguiente"}</button></div></div>`;
+ tmr();
+}
+function openCk(r){
+ CK.r=r;CK.i=-1;$("#ck").hidden=false;document.body.style.overflow="hidden";ckr();wl(true);
+ try{$("#ckt").focus()}catch(e){}
+}
+function closeCk(){
+ tclear();$("#ck").hidden=true;document.body.style.overflow="";wl(false);CK.r=null;
+ try{const b=$("#cook");if(b)b.focus()}catch(e){}
+}
+const bk=()=>JSON.stringify({app:"glutoff",v:1,fecha:new Date().toISOString().slice(0,10),fav,notes,shop,plan,flags:S.flags});
+function rest(txt){
+ let d;try{d=JSON.parse(txt)}catch(e){return "El archivo o texto no es una copia válida."}
+ if(!d||d.app!="glutoff")return "Esto no parece una copia de Glutoff.";
+ const ok=id=>typeof id=="string"&&R.some(r=>r.id==id);
+ let a=0,b=0,c=0;
+ (Array.isArray(d.fav)?d.fav:[]).forEach(id=>{if(ok(id)&&!fav.includes(id)){fav.push(id);a++}});
+ Object.entries(d.notes&&typeof d.notes=="object"?d.notes:{}).forEach(([id,t])=>{if(ok(id)&&typeof t=="string"&&t.trim()){notes[id]=t.slice(0,2000);b++}});
+ const it=d.shop&&Array.isArray(d.shop.it)?d.shop.it:[];
+ it.forEach(x=>{if(x&&ok(x.id)){const p=Math.min(100,Math.max(1,parseInt(x.p)||1)),i=shop.it.findIndex(y=>y.id==x.id);if(i<0)shop.it.push({id:x.id,p});else shop.it[i].p=p;c++}});
+ if(d.shop&&d.shop.dn&&typeof d.shop.dn=="object")Object.keys(d.shop.dn).forEach(k=>{if(d.shop.dn[k]===true)shop.dn[k]=true});
+ let e=0;
+ (Array.isArray(d.plan)?d.plan:[]).slice(0,7).forEach((day,i)=>{(Array.isArray(day)?day:[]).forEach(x=>{if(x&&ok(x.id)){const p=Math.min(100,Math.max(1,parseInt(x.p)||1)),j=plan[i].findIndex(y=>y.id==x.id);if(j<0)plan[i].push({id:x.id,p});else plan[i][j].p=p;e++}})});
+ if(d.flags&&typeof d.flags=="object")Object.keys(TG).forEach(k=>{if(d.flags[k]===true)S.flags[k]=true});
+ sv("ms_flags",S.flags);document.querySelectorAll("#chips input").forEach(x=>{x.checked=!!S.flags[x.dataset.k]});
+ sv("ms_fav",fav);sv("ms_notes",notes);ss();spl();refresh();
+ const pl=(n,s,m)=>n+" "+(n==1?s:m);return "Listo: "+pl(a,"favorita nueva","favoritas nuevas")+", "+pl(b,"nota","notas")+", "+pl(c,"receta de la lista","recetas de la lista")+" y "+pl(e,"plato del menú","platos del menú")+".";
+}
+function dlb(){
+ const bl=new Blob([bk()],{type:"application/json"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(bl);a.download="glutoff-copia-"+new Date().toISOString().slice(0,10)+".json";
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+const DAYS=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+const spl=()=>sv("ms_plan",plan);
+const canon=s=>{
+ let n=s.replace(/\s*\(.*?\)/g,"").replace(/ (instantánea|en polvo)$/,"").replace(/ para (el|la|los|las|rebozar|freír)\b.*$/,""),p;
+ do{p=n;n=n.replace(/ (blandas?|fría|derretida|tibia|picad[oa]s?|ralladas?|rallado|duros|maduros|congelados|salteadas|troceado|desmenuzado|en (cubitos|cubos|rodajas|tiras|láminas finas)|hervidas y pisadas)$/,"")}while(n!=p);
+ return n.replace(/^(huevo|yema|zanahoria|papa|tomate|manzana|plátano)s$/,"$1");
+};
+const PL={huevo:"huevos",yema:"yemas",zanahoria:"zanahorias",papa:"papas",tomate:"tomates",manzana:"manzanas",plátano:"plátanos"};
+const nm=(n,q)=>PL[n]?(Math.abs(q-1)<1e-9?n:PL[n]):n;
+const lbl=g=>fmt(g.q)+(g.u=="u"?"":" "+g.u)+" "+nm(g.n,g.q);
+const SEC=[
+["Carnes, pescados y fiambres",/\b(pollo|carne|salmon|jamon|muslos?)\b/],
+["Repostería y dulces",/galletas|chocolate|cacao|dulce de leche|leche condensada|azucar|chispas|miel|pasas|confitadas/],
+["Lácteos, huevos y bebidas vegetales",/leche|yogur|queso|crema|manteca|ricota|huevo|yema|clara|bebida vegetal/],
+["Harinas, almidones y panificación",/harina|premezcla|almidon|fecula|maicena|psyllium|xantana|polvo de hornear|levadura/],
+["Pastas, panes y tortillas",/^pan |pasta|fideos|lasana|tortillas/],
+["Arroz, legumbres y granos",/arroz|lentejas|quinua|garbanzos|avena/],
+["Despensa y condimentos",/aceite|^sal$|comino|pimenton|oregano|canela|jengibre|caldo|tamari|salsa|mayonesa|esencia|vainilla|semillas|sesamo|vinagre/],
+["Verduras y frutas",/papa|cebolla|zanahoria|pimiento|tomate|ajo|zucchini|zapallo|espinaca|lechuga|pepino|palta|limon|naranja|platano|manzana|frutilla|repollo|brotes|perejil|albahaca|romero|lima|arvejas|choclo|verdeo|verduras/]
+];
+const SECN=SEC.map(x=>x[0]).concat("Otros");
+const sec=n=>{const k=norm(n);for(const [t,re] of SEC)if(re.test(k))return t;return "Otros"};
+function grp(a){
+ const by={};a.forEach(g=>{const s=sec(g.n);(by[s]=by[s]||[]).push(g)});
+ return SECN.filter(s=>by[s]).map(s=>`<h4 class="sech">${s}</h4>`+by[s].map(g=>`<label class="chk"><input type="checkbox" data-sd="${esc(g.k)}"${shop.dn[g.k]?" checked":""}><span${shop.dn[g.k]?' style="text-decoration:line-through;color:var(--mut)"':""}>${lbl(g)}</span></label>`).join("")).join("");
+}
+function plan2shop(){
+ const tot={};plan.forEach(d=>d.forEach(x=>{tot[x.id]=(tot[x.id]||0)+x.p}));
+ const ids=Object.keys(tot);
+ ids.forEach(id=>{const p=Math.min(100,tot[id]),e=shop.it.find(y=>y.id==id);if(e)e.p=p;else shop.it.push({id,p})});
+ ss();nf();return ids.length;
+}
+const ptx=()=>"Menú semanal (Glutoff)\n"+DAYS.map((d,i)=>d+": "+(plan[i].length?plan[i].map(x=>{const r=R.find(y=>y.id==x.id);return r?r.n+" ("+x.p+")":""}).join(", "):"-")).join("\n");
+function planv(){
+ const opts='<option value="">Elegir receta…</option>'+cats.map(c=>`<optgroup label="${c}">`+R.filter(r=>r.c==c).sort((a,b)=>a.n.localeCompare(b.n,"es")).map(r=>`<option value="${r.id}">${r.n}</option>`).join("")+"</optgroup>").join("");
+ const n=plan.reduce((s,d)=>s+d.length,0);
+ $("#pl").innerHTML=`<div class="grid">${DAYS.map((d,i)=>`<section class="box" style="margin:0"><h3>${d}</h3>${plan[i].map((x,j)=>{const r=R.find(y=>y.id==x.id);return r?`<div class="srow"><button class="lnk" data-go="${r.id}">${r.n}</button><span class="stp"><button data-pp="${i}|${j}|-1" aria-label="Menos porciones de ${r.n}">−</button><span><b>${x.p}</b> porc.</span><button data-pp="${i}|${j}|1" aria-label="Más porciones de ${r.n}">+</button></span><button class="del" data-pr="${i}|${j}" aria-label="Quitar ${r.n} de ${d}">Quitar</button></div>`:""}).join("")||'<p class="note" style="margin:.2rem 0">Sin recetas.</p>'}<div class="acts" style="margin:.6rem 0 0"><label class="f" style="flex:1;min-width:140px"><span class="sr">Agregar receta a ${d}</span><select id="ps${i}">${opts}</select></label><button class="btn2" data-pa="${i}">Agregar</button></div></section>`).join("")}</div>
+<div class="acts" style="margin-top:1rem"><button class="btn" id="pshop"${n?"":" disabled"}>Agregar el menú a la lista de compras</button><button class="btn2" id="pcp"${n?"":" disabled"}>Copiar menú</button><button class="btn2" id="pclr"${n?"":" disabled"}>Vaciar menú</button></div>
+<p class="note" id="pm" role="status"></p><textarea id="ptx" rows="8" hidden readonly></textarea>`;
+}
+const REV={por:"",fecha:""};
+function chkItems(r){
+ const a=["Lavé la mesada, las tablas y los utensilios con agua y detergente","Me lavé las manos","Revisé la etiqueta de cada ingrediente (sello sin gluten)","Usaré utensilios exclusivos o bien lavados, sin madera ni coladores usados con trigo"];
+ if(r.k>=1)a.push("El horno, la sartén o la olla están limpios, sin restos de trigo","Usaré papel de horno y moldes nuevos o limpios");
+ if(r.k>=2)a.push("Prepararé esta receta antes que cualquier comida con gluten y la mantendré tapada");
+ const ns=r.i.map(g=>norm(g[2])).join(" ");
+ if(/soja|tamari/.test(ns))a.push("El tamari o la salsa de soja dicen sin gluten");
+ if(/avena/.test(ns))a.push("La avena tiene sello sin gluten y mi médico la permite");
+ if(/caldo/.test(ns))a.push("El caldo es sin gluten");
+ if(/aceite para freir/.test(ns))a.push("La freidora y el aceite no se usaron con empanizados de trigo");
+ if(/chocolate|cacao|chispas|galletas/.test(ns))a.push("El chocolate, el cacao y las galletas dicen sin gluten");
+ return a;
+}
+function chkHtml(r){
+ const it=chkItems(r),a=S.chk[r.id]||[],n=it.filter((_,j)=>a[j]).length;
+ return `<div class="box chkl"><h3>Antes de empezar</h3><p class="note ckpg" role="status">${n==it.length?"Todo listo para cocinar":n+" de "+it.length+" marcados"}</p>${it.map((t,j)=>`<label class="chk"><input type="checkbox" data-ck="${j}"${a[j]?" checked":""}><span>${t}</span></label>`).join("")}</div>`;
+}
+function ckc(){
+ const r=CK.r;
+ $("#ck").innerHTML=`<div class="ckw"><div class="ckh"><b id="ckt" tabindex="-1">${r.n}</b><button class="btn2" id="ckx">Cerrar</button></div>
+<div class="ckp" aria-hidden="true"><i style="width:0%"></i></div>
+${chkHtml(r)}
+<div class="ckn"><button class="btn2" id="ckb" disabled>Anterior</button><button class="btn" id="ckf">Empezar a cocinar</button></div></div>`;
+}
+const raf=f=>typeof requestAnimationFrame=="function"?requestAnimationFrame(()=>requestAnimationFrame(f)):setTimeout(f,0);
+function goTo(el,pos){raf(()=>{try{el.scrollIntoView({block:pos||"start"})}catch(e){}})}
+function toNav(){raf(()=>{try{const n=$("nav");if(n.getBoundingClientRect().top<0)n.scrollIntoView({block:"start"})}catch(e){}})}
+function show(v){
+ S.v=v;["R","G","F","L","P"].forEach(k=>$("#v"+k).hidden=k!=v);
+ document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.v==v));
+ if(v=="F")favs();if(v=="L")shopv();if(v=="P")planv();
+}
+function view(){
+ const o=!!S.open;$("#flt").hidden=o;$("#list").hidden=o;$("#det").hidden=!o;
+ if(o)det();else list()
+}
+function nf(){$("#nf").textContent="Favoritos ("+fav.length+")";$("#nl").textContent="Lista ("+shop.it.length+")";const c=plan.reduce((s,d)=>s+d.length,0);$("#np").textContent="Menú"+(c?" ("+c+")":"")}
+const ss=()=>sv("ms_shop",shop);
+function agg(){const m={};shop.it.forEach(x=>{const r=R.find(y=>y.id==x.id);if(!r)return;r.i.forEach(g=>{const nn=canon(g[2]);if(/^agua\b/.test(norm(nn)))return;const k=norm(nn)+"|"+g[1];(m[k]=m[k]||{q:0,u:g[1],n:nn,k}).q+=g[0]*x.p/r.s})});return Object.values(m).sort((a,b)=>(shop.dn[a.k]?1:0)-(shop.dn[b.k]?1:0)||a.n.localeCompare(b.n,"es"))}
+const txt=()=>"Lista de compras (Glutoff)\n"+SECN.map(s=>{const l=agg().filter(g=>!shop.dn[g.k]&&sec(g.n)==s);return l.length?"\n"+s+":\n"+l.map(g=>"- "+lbl(g)).join("\n"):""}).join("");
+function shopv(){
+ const rs=shop.it.map(x=>({x,r:R.find(y=>y.id==x.id)})).filter(o=>o.r),a=agg();
+ $("#sl").innerHTML=rs.length?`<div class="box"><h3>Recetas en la lista</h3>${rs.map(o=>`<div class="srow"><span>${o.r.n}</span><span class="stp"><button data-sp="${o.r.id}|-1" aria-label="Menos porciones">−</button><span><b>${o.x.p}</b> porciones</span><button data-sp="${o.r.id}|1" aria-label="Más porciones">+</button></span><button class="del" data-sr="${o.r.id}">Quitar</button></div>`).join("")}</div><div class="box"><h3>Ingredientes</h3>${grp(a)}<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center"><button class="btn" id="scp">Copiar lista</button><button class="back" id="sclr" style="margin:0">Vaciar lista</button></div><textarea id="stx" rows="6" hidden readonly style="margin-top:.8rem"></textarea></div>`:'<p class="empty">Tu lista está vacía. Abre una receta y toca “Agregar a la lista de compras”.</p>';
+}
+function refresh(){nf();if(S.v=="F")favs();else if(S.open)det();else list()}
+
+document.addEventListener("click",e=>{
+ const t=e.target;
+ const pa=t.closest("[data-pa]");if(pa){const i=+pa.dataset.pa,id=$("#ps"+i).value;if(id&&!plan[i].some(x=>x.id==id)){plan[i].push({id,p:R.find(r=>r.id==id).s});spl();nf();planv()}return}
+ const pp=t.closest("[data-pp]");if(pp){const[i,j,d]=pp.dataset.pp.split("|").map(Number),x=plan[i][j];if(x){x.p=Math.min(100,Math.max(1,x.p+d));spl();planv()}return}
+ const pr=t.closest("[data-pr]");if(pr){const[i,j]=pr.dataset.pr.split("|").map(Number);plan[i].splice(j,1);spl();nf();planv();return}
+ const go=t.closest("[data-go]");if(go){openR(go.dataset.go);return}
+ if(t.id=="pshop"){const n=plan2shop();$("#pm").textContent=n?n+(n==1?" receta pasada":" recetas pasadas")+" a la lista de compras. Revísala en la pestaña Lista.":"El menú está vacío.";return}
+ if(t.id=="pclr"){plan=[[],[],[],[],[],[],[]];spl();nf();planv();return}
+ if(t.id=="pcp"){cp(ptx(),$("#ptx"),ok=>{$("#pm").textContent=ok?"Menú copiado.":"Copia el texto de la caja."});return}
+ if(t.id=="padd"){const r=R.find(x=>x.id==S.open),i=+$("#pdy").value,p=S.por[r.id]||r.s,e=plan[i].find(x=>x.id==r.id);if(e)e.p=p;else plan[i].push({id:r.id,p});spl();nf();t.textContent="✓ En el menú de "+DAYS[i];return}
+ if(t.id=="fclr"){$("#q").value="";$("#cat").value="";$("#type").value="";$("#sort").value="";$("#time").value="0";$("#diff").value="0";S.flags={};sv("ms_flags",S.flags);document.querySelectorAll("#chips input").forEach(x=>{x.checked=false});list();return}
+ if(t.id=="cook"){openCk(R.find(x=>x.id==S.open));return}
+ if(t.id=="ckx"){closeCk();return}
+ if(t.id=="ckb"){if(CK.i>-1){CK.i--;ckr()}return}
+ if(t.id=="ckf"){if(CK.i<CK.r.st.length-1){CK.i++;ckr()}else closeCk();return}
+ const ct=t.closest("[data-ct]");if(ct){tstart(+ct.dataset.ct);return}
+ if(t.id=="ctp"){tpause();return}
+ if(t.id=="ctr"){tclear();return}
+ if(t.id=="shr"){const r=R.find(x=>x.id==S.open);navigator.share({title:r.n,text:rtxt(r)}).catch(e=>{if(e&&e.name!="AbortError")cp(rtxt(r),$("#shx"),()=>{})});return}
+ if(t.id=="shc"){const r=R.find(x=>x.id==S.open);cp(rtxt(r),$("#shx"),ok=>{t.textContent=ok?"¡Copiada!":"Copia el texto de abajo";setTimeout(()=>{t.textContent="Copiar receta"},2000)});return}
+ if(t.id=="bkd"){if(!STAND){$("#bkm").textContent="Aquí las descargas no están disponibles: usa «Copiar copia».";return}dlb();$("#bkm").textContent="Copia descargada.";return}
+ if(t.id=="bkc"){cp(bk(),$("#bkt"),ok=>{$("#bkm").textContent=ok?"Copia copiada. Pégala en un lugar seguro (notas o correo) para restaurarla después.":"Copia el texto de la caja y guárdalo en un lugar seguro."});return}
+ if(t.id=="bki"){$("#bkf").click();return}
+ if(t.id=="bkr"){const v=$("#bkt").value.trim();$("#bkm").textContent=v?rest(v):"Pega primero el texto de una copia.";return}
+ if(t.id=="sadd"){const r=R.find(x=>x.id==S.open),p=S.por[r.id]||r.s,i=shop.it.findIndex(x=>x.id==r.id);if(i<0)shop.it.push({id:r.id,p});else shop.it[i].p=p;ss();nf();t.textContent="✓ En la lista (actualizar)";return}
+ const sp=t.closest("[data-sp]");if(sp){const[id,d]=sp.dataset.sp.split("|"),x=shop.it.find(y=>y.id==id);if(x){x.p=Math.max(1,x.p+ +d);ss();shopv()}return}
+ const sr=t.closest("[data-sr]");if(sr){shop.it=shop.it.filter(x=>x.id!=sr.dataset.sr);ss();nf();shopv();return}
+ if(t.id=="sclr"){shop={it:[],dn:{}};ss();nf();shopv();return}
+ if(t.id=="scp"){const tx=txt(),ta=$("#stx"),ok=()=>{t.textContent="¡Copiada!";setTimeout(()=>{t.textContent="Copiar lista"},1500)},fb=()=>{ta.hidden=false;ta.value=tx;ta.select()};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx).then(ok).catch(fb);else fb();return}
+ const nb=t.closest("nav button");if(nb){S.open=null;show(nb.dataset.v);view();clearHash();toNav();return}
+ const o=t.closest(".open");if(o){openR(o.dataset.id);return}
+ const f=t.closest(".fav");if(f){const id=f.dataset.f;fav=fav.includes(id)?fav.filter(x=>x!=id):[...fav,id];sv("ms_fav",fav);refresh();return}
+ if(t.closest(".back")){if(STAND&&history.state&&history.state.r)history.back();else closeView();return}
+ const pb=t.closest("[data-p]");if(pb){const r=R.find(x=>x.id==S.open);S.por[r.id]=Math.max(1,(S.por[r.id]||r.s)+(+pb.dataset.p));$("#pn").textContent=S.por[r.id];$("#ing").innerHTML=ing(r);const w=$("#shw");if(w)w.href=wa(r);return}
+});
+["q","cat","type","time","diff","sort"].forEach(i=>$("#"+i).addEventListener("input",list));
+$("#sl").addEventListener("change",e=>{const k=e.target.dataset.sd;if(k===undefined)return;shop.dn[k]=e.target.checked;ss();const s=e.target.nextElementSibling;s.style.textDecoration=e.target.checked?"line-through":"";s.style.color=e.target.checked?"var(--mut)":""});
+$("#chips").addEventListener("change",e=>{if(!e.target.dataset||e.target.dataset.k===undefined)return;S.flags[e.target.dataset.k]=e.target.checked;sv("ms_flags",S.flags);list()});
+$("#lab").addEventListener("input",e=>{
+ const v=norm(e.target.value),h=TERMS.filter(t=>v.includes(t[0]));
+ $("#res").innerHTML=!v.trim()?"":h.length?h.map(t=>`<div class="hit">⚠️ <b>${t[0]}</b>: ${t[1]}</div>`).join(""):'<div class="hit">No encontré nombres de la lista. Eso no garantiza que sea seguro: busca el sello sin gluten y revisa los avisos de trazas.</div>';
+});
+$("#rev").textContent=REV.por&&REV.fecha?"Contenido revisado por "+REV.por+" ("+REV.fecha+").":"Contenido pendiente de revisión por un profesional de la salud.";
+document.addEventListener("change",e=>{
+ const t=e.target;if(!t||!t.dataset||t.dataset.ck===undefined)return;
+ const id=S.open||(CK.r&&CK.r.id),r=R.find(x=>x.id==id);if(!r)return;
+ const i=+t.dataset.ck,a=S.chk[id]=S.chk[id]||[];a[i]=t.checked;
+ document.querySelectorAll('[data-ck="'+i+'"]').forEach(x=>{x.checked=t.checked});
+ const it=chkItems(r),n=it.filter((_,j)=>a[j]).length;
+ document.querySelectorAll(".ckpg").forEach(x=>{x.textContent=n==it.length?"Todo listo para cocinar":n+" de "+it.length+" marcados"});
+});
+let ntT;
+document.addEventListener("input",e=>{
+ const t=e.target;if(!t||t.id!="nt"||!S.open)return;
+ const id=S.open,v=t.value;clearTimeout(ntT);$("#nts").textContent="Guardando…";
+ ntT=setTimeout(()=>{if(v.trim())notes[id]=v.slice(0,2000);else delete notes[id];sv("ms_notes",notes);const s=$("#nts");if(s)s.textContent="Guardado en este dispositivo."},400);
+});
+document.addEventListener("keydown",e=>{
+ if(!CK.r)return;
+ if(e.key=="Escape")closeCk();
+ else if(e.key=="ArrowRight"&&CK.i<CK.r.st.length-1){CK.i++;ckr()}
+ else if(e.key=="ArrowLeft"&&CK.i>-1){CK.i--;ckr()}
+});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){if(CK.r&&!CK.w)wl(true);tick()}});
+$("#bkf").addEventListener("change",e=>{
+ const f=e.target.files&&e.target.files[0];if(!f)return;
+ const rd=new FileReader();rd.onload=()=>{$("#bkm").textContent=rest(String(rd.result))};rd.readAsText(f);e.target.value="";
+});
+if(STAND)addEventListener("popstate",()=>{
+ const id=location.hash.slice(1);if(CK.r)closeCk();
+ if(R.some(r=>r.id==id))openR(id,false);else if(S.open)closeView();
+});
+nf();list();
+{const h0=typeof location!="undefined"?location.hash.slice(1):"";if(R.some(r=>r.id==h0))openR(h0,false)}
+</script>
+<script>
+let dp=null;
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;document.getElementById("inst").hidden=false});
+document.getElementById("inst").addEventListener("click",async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;document.getElementById("inst").hidden=true});
+addEventListener("appinstalled",()=>{document.getElementById("inst").hidden=true});
+const netui=()=>{document.getElementById("net").hidden=navigator.onLine};
+addEventListener("online",netui);addEventListener("offline",netui);netui();
+if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+</script>
+</body>
+</html>
